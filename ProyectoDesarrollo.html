@@ -1,0 +1,3311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador Final - Desarrollo Humano (LIDTS)</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap');
+
+        :root {
+
+            --tinta: #2b2420;
+            --fondo-oscuro: #2f3d34;
+            --terracota: #b4532f;
+            --verde: #4d7a58;
+            --mostaza: #c79328;
+            --vino: #8a3a4a;
+            --petroleo: #2f6c74;
+            --oliva: #75763a;
+            --unach-dorado: #c79328;
+            --unach-dorado-claro: #f0d58c;
+            --acento-dorado: #c79328;
+            --unach-azul-medio: var(--terracota);
+            --unach-azul-claro: var(--terracota);
+            --azul-profundo: #2b2420;
+
+            --fondo-pagina: #f3eee4;
+            --fondo-superficie: #fffdf8;
+            --fondo-suave: #f8f3ea;
+            --fondo-tenue: #f4ece0;
+            --fondo-dorado-tenue: #faf1dc;
+
+            --texto-principal: #2e2925;
+            --texto-secundario: #6b6158;
+            --texto-tenue: #9a8f84;
+
+            --borde: #e6dccb;
+            --borde-fuerte: #d3c5ad;
+            --exito: #1f8a4c;
+            --fondo-exito: #e8f7ee;
+            --error: #c0392b;
+            --fondo-error: #fdecea;
+
+            --fuente-titulos: 'Source Serif 4', Georgia, serif;
+            --fuente-texto: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+
+            --ancho-contenido: 1320px;
+            --ancho-lectura: 75ch;
+            --radio-sm: 8px;
+            --radio: 14px;
+            --radio-lg: 22px;
+            --linea: 1px solid var(--borde);
+
+            --sombra-sm: 0 1px 2px rgba(60, 42, 25, 0.06), 0 1px 3px rgba(60, 42, 25, 0.05);
+            --sombra: 0 4px 6px -1px rgba(60, 42, 25, 0.06), 0 10px 24px -6px rgba(60, 42, 25, 0.10);
+            --sombra-lg: 0 20px 45px -12px rgba(60, 42, 25, 0.22);
+
+            --espacio-1: 8px;
+            --espacio-2: 16px;
+            --espacio-3: 24px;
+            --espacio-4: 32px;
+            --espacio-5: 40px;
+            --espacio-6: 56px;
+
+            --transicion: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--espacio-4);
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--fondo-pagina);
+            color: var(--texto-principal);
+            font-family: var(--fuente-texto);
+            font-size: 16px;
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            color: var(--azul-profundo);
+            background: var(--unach-dorado-claro);
+        }
+
+        a {
+            color: var(--unach-azul-medio);
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        .tarjeta-memoria:focus-visible {
+            outline: 3px solid var(--unach-dorado);
+            outline-offset: 3px;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        .barra-lectura {
+            position: fixed;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: var(--acento-dorado);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+            transition: width 80ms linear;
+        }
+
+        .btn-subir {
+            position: fixed;
+            z-index: 900;
+            right: 28px;
+            bottom: 28px;
+            display: grid;
+            place-items: center;
+            width: 50px;
+            height: 50px;
+            color: #fff;
+            background: var(--fondo-oscuro);
+            border: 2px solid var(--unach-dorado);
+            border-radius: 50%;
+            box-shadow: var(--sombra-lg);
+            font-size: 1.35rem;
+            font-weight: 700;
+            text-decoration: none;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(16px) scale(0.9);
+            transition: opacity var(--transicion), transform var(--transicion), box-shadow var(--transicion);
+        }
+
+        .btn-subir.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .btn-subir:hover {
+            box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.25), var(--sombra-lg);
+            transform: translateY(-3px) scale(1.04);
+        }
+
+        #fortnite-toast {
+            position: fixed;
+            z-index: 9999;
+            top: -200px;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            gap: var(--espacio-2);
+            max-width: calc(100vw - 32px);
+            padding: var(--espacio-2) var(--espacio-3);
+            transform: translateX(-50%);
+            color: #fff;
+            background: var(--fondo-oscuro);
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            border-radius: var(--radio);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.18), 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            transition: top 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #fortnite-toast.mostrar {
+            top: var(--espacio-3);
+        }
+
+        .token-icon {
+            display: flex;
+            flex: 0 0 52px;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            color: var(--azul-profundo);
+            background: var(--acento-dorado);
+            border-radius: 50%;
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.55);
+            font-size: 26px;
+            animation: brillo-token 2.4s ease-in-out infinite;
+        }
+
+        @keyframes brillo-token {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
+            }
+
+            50% {
+                box-shadow: 0 0 26px rgba(212, 175, 55, 0.85);
+            }
+        }
+
+        .token-texto {
+            min-width: 0;
+        }
+
+        .token-rareza,
+        .token-sub {
+            margin: 0;
+            color: var(--unach-dorado-claro);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        .token-titulo {
+            margin: 2px 0;
+            color: #fff;
+            font-family: var(--fuente-titulos);
+            font-size: 1.25rem;
+            line-height: 1.3;
+        }
+
+        .cofre-oculto {
+            display: none;
+            align-items: center;
+            gap: var(--espacio-3);
+            margin-bottom: var(--espacio-5);
+            padding: var(--espacio-4);
+            color: #fff;
+            background: var(--fondo-oscuro);
+            border: 1px solid var(--unach-dorado);
+            border-radius: var(--radio-lg);
+            box-shadow: var(--sombra-lg);
+            animation: aparecer 600ms ease both;
+        }
+
+        .cofre-oculto.desbloqueado {
+            display: flex;
+        }
+
+        .cofre-oculto .token-icon {
+            flex-basis: 64px;
+            width: 64px;
+            height: 64px;
+            font-size: 32px;
+        }
+
+        .cofre-oculto .token-titulo {
+            color: #fff;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header.membrete {
+            position: relative;
+            overflow: hidden;
+            padding: var(--espacio-6) var(--espacio-3) calc(var(--espacio-6) + 6px);
+            color: #fff;
+            background: var(--fondo-oscuro);
+            isolation: isolate;
+        }
+
+        header.membrete::after {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 8px;
+            background: linear-gradient(90deg,
+                    var(--terracota) 0 16.66%,
+                    var(--verde) 16.66% 33.33%,
+                    var(--mostaza) 33.33% 50%,
+                    var(--vino) 50% 66.66%,
+                    var(--petroleo) 66.66% 83.33%,
+                    var(--oliva) 83.33% 100%);
+            content: "";
+        }
+
+        .membrete-contenedor {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+            align-items: center;
+            gap: var(--espacio-5);
+            max-width: var(--ancho-contenido);
+            margin: 0 auto;
+        }
+
+        .membrete-logo-fila {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: var(--espacio-3);
+        }
+
+        .logo-unach {
+            width: auto;
+            height: 120px;
+            max-width: 320px;
+            object-fit: contain;
+            padding: 12px 18px;
+            background: var(--fondo-superficie);
+            border: 2px solid var(--unach-dorado);
+            border-radius: var(--radio);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .membrete-insignia {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            color: var(--unach-dorado-claro);
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .membrete-insignia::before {
+            width: 7px;
+            height: 7px;
+            background: var(--unach-dorado);
+            border-radius: 50%;
+            content: "";
+        }
+
+        .membrete-titulos h1 {
+            margin-bottom: var(--espacio-2);
+            color: #fff;
+            font-family: var(--fuente-titulos);
+            font-size: clamp(1.9rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .membrete-titulos h1::after {
+            display: block;
+            width: 84px;
+            height: 4px;
+            margin-top: var(--espacio-2);
+            background: var(--acento-dorado);
+            border-radius: 4px;
+            content: "";
+        }
+
+        .membrete-titulos h2 {
+            margin-bottom: 6px;
+            color: #fff;
+            font-size: clamp(1rem, 1.6vw, 1.18rem);
+            font-weight: 600;
+            line-height: 1.45;
+        }
+
+        .membrete-titulos h3 {
+            color: #d5dccf;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .membrete-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: var(--espacio-3);
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            color: #eef0e8;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            font-size: 0.84rem;
+            line-height: 1.3;
+        }
+
+        .chip strong {
+            color: var(--unach-dorado-claro);
+            font-weight: 600;
+        }
+
+        .membrete-datos {
+            padding: var(--espacio-3);
+            color: var(--texto-principal);
+            background: var(--fondo-superficie);
+            border-radius: var(--radio-lg);
+            box-shadow: 0 18px 36px -18px rgba(0, 0, 0, 0.55);
+        }
+
+        .membrete-datos-titulo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: var(--espacio-2);
+            color: var(--terracota);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .membrete-datos-titulo::after {
+            flex: 1;
+            height: 1px;
+            background: var(--borde);
+            content: "";
+        }
+
+        .lista-integrantes {
+            display: grid;
+            gap: 12px;
+            list-style: none;
+        }
+
+        .integrante {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            background: var(--fondo-suave);
+            border: 1px solid var(--borde);
+            border-radius: var(--radio);
+            transition: background-color var(--transicion), border-color var(--transicion), transform var(--transicion);
+        }
+
+        .integrante:hover {
+            background: var(--fondo-dorado-tenue);
+            border-color: var(--mostaza);
+            transform: translateX(4px);
+        }
+
+        .avatar-integrante {
+            display: grid;
+            flex: 0 0 46px;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            color: #fff;
+            background: var(--terracota);
+            border-radius: 50%;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .integrante+.integrante .avatar-integrante {
+            background: var(--verde);
+        }
+
+        .nombre-integrante {
+            color: var(--tinta);
+            font-size: 0.98rem;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .contenedor-principal {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
+            align-items: start;
+            gap: var(--espacio-4);
+            max-width: var(--ancho-contenido);
+            margin: var(--espacio-5) auto;
+            padding: 0 var(--espacio-3);
+        }
+
+        aside.indice-navegacion {
+            position: sticky;
+            top: var(--espacio-3);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            padding: var(--espacio-3) var(--espacio-2);
+            background: var(--fondo-superficie);
+            border: var(--linea);
+            border-radius: var(--radio-lg);
+            box-shadow: var(--sombra);
+        }
+
+        aside.indice-navegacion::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        aside.indice-navegacion::-webkit-scrollbar-thumb {
+            background: var(--borde-fuerte);
+            border-radius: 3px;
+        }
+
+        aside.indice-navegacion h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 8px var(--espacio-2);
+            color: var(--tinta);
+            font-family: var(--fuente-titulos);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        aside.indice-navegacion h2::before {
+            width: 6px;
+            height: 22px;
+            background: var(--acento-dorado);
+            border-radius: 4px;
+            content: "";
+        }
+
+        .lista-indice,
+        .sublista-indice {
+            list-style: none;
+        }
+
+        .lista-indice>li {
+            margin-bottom: 6px;
+        }
+
+        .lista-indice a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--texto-principal);
+            border-radius: var(--radio-sm);
+            font-size: 0.9rem;
+            font-weight: 700;
+            line-height: 1.4;
+            text-decoration: none;
+            transition: color var(--transicion), background-color var(--transicion), padding var(--transicion);
+        }
+
+        .lista-indice a:hover {
+            padding-left: 16px;
+            color: var(--tinta);
+            background: var(--fondo-tenue);
+        }
+
+        .lista-indice a.activo {
+            color: #fff;
+            background: var(--terracota);
+        }
+
+        .sublista-indice {
+            margin: 4px 0 10px 14px;
+            padding-left: 10px;
+            border-left: 2px solid var(--borde);
+        }
+
+        .sublista-indice li a {
+            padding: 5px 10px;
+            color: var(--texto-secundario);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .sublista-indice li a.activo {
+            color: var(--tinta);
+            background: var(--fondo-dorado-tenue);
+            box-shadow: inset 3px 0 0 var(--unach-dorado);
+        }
+
+        .contador-cartas-panel {
+            margin-top: var(--espacio-3);
+            padding: var(--espacio-2);
+            color: var(--texto-secundario);
+            background: var(--fondo-dorado-tenue);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            border-radius: var(--radio);
+            font-size: 0.85rem;
+        }
+
+        .contador-cartas-panel strong {
+            color: var(--tinta);
+        }
+
+        #progreso-cartas {
+            display: inline-block;
+            min-width: 52px;
+            margin-left: 4px;
+            padding: 1px 10px;
+            color: var(--azul-profundo);
+            background: var(--acento-dorado);
+            border-radius: 999px;
+            font-variant-numeric: tabular-nums;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .barra-cartas {
+            overflow: hidden;
+            height: 8px;
+            margin-top: 10px;
+            background: rgba(60, 42, 25, 0.1);
+            border-radius: 999px;
+        }
+
+        #barra-cartas-relleno {
+            display: block;
+            width: 0;
+            height: 100%;
+            background: var(--acento-dorado);
+            border-radius: 999px;
+            transition: width 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .contador-cartas-panel small {
+            display: block;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .contenido-blog {
+            min-width: 0;
+        }
+
+        .bloque-subcompetencia {
+            --acento: var(--terracota);
+            --acento-fondo: #fbefe8;
+            position: relative;
+            overflow: hidden;
+            scroll-margin-top: var(--espacio-3);
+            margin-bottom: var(--espacio-4);
+            padding: var(--espacio-5);
+            background: var(--fondo-superficie);
+            border: var(--linea);
+            border-radius: var(--radio-lg);
+            box-shadow: var(--sombra);
+        }
+
+        #subcompetencia-1 {
+            --acento: var(--terracota);
+            --acento-fondo: #fbefe8;
+        }
+
+        #subcompetencia-2 {
+            --acento: var(--verde);
+            --acento-fondo: #edf4ee;
+        }
+
+        #subcompetencia-3 {
+            --acento: var(--mostaza);
+            --acento-fondo: #fbf3df;
+        }
+
+        #subcompetencia-4 {
+            --acento: var(--vino);
+            --acento-fondo: #f8ecee;
+        }
+
+        #subcompetencia-5 {
+            --acento: var(--petroleo);
+            --acento-fondo: #e9f3f3;
+        }
+
+        #subcompetencia-6 {
+            --acento: var(--oliva);
+            --acento-fondo: #f3f3e4;
+        }
+
+        #conclusiones {
+            --acento: var(--fondo-oscuro);
+            --acento-fondo: #eef1ec;
+        }
+
+        .bloque-subcompetencia::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--acento);
+            content: "";
+        }
+
+        .bloque-subcompetencia:target {
+            box-shadow: 0 0 0 3px var(--acento), var(--sombra-lg);
+        }
+
+        .encabezado-subcompetencia {
+            margin: calc(var(--espacio-5) * -1) calc(var(--espacio-5) * -1) var(--espacio-4);
+            padding: calc(var(--espacio-5) + 6px) var(--espacio-5) var(--espacio-4);
+            background: var(--acento-fondo);
+            border-bottom: var(--linea);
+        }
+
+        .etiqueta-sub {
+            display: inline-block;
+            margin-bottom: var(--espacio-1);
+            padding: 5px 14px;
+            color: #fff;
+            background: var(--acento);
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .encabezado-subcompetencia h2 {
+            color: var(--tinta);
+            font-family: var(--fuente-titulos);
+            font-size: clamp(1.6rem, 2.8vw, 2.25rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .bloque-tema {
+            scroll-margin-top: var(--espacio-3);
+            margin-bottom: var(--espacio-5);
+            padding-bottom: var(--espacio-4);
+            border-bottom: 1px dashed var(--borde-fuerte);
+        }
+
+        .bloque-tema:last-of-type {
+            border-bottom: 0;
+        }
+
+        .bloque-tema h3 {
+            position: relative;
+            margin-bottom: var(--espacio-2);
+            padding-left: 18px;
+            color: var(--tinta);
+            font-family: var(--fuente-titulos);
+            font-size: clamp(1.3rem, 2vw, 1.6rem);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .bloque-tema h3::before {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 0;
+            width: 5px;
+            background: var(--acento, var(--acento-dorado));
+            border-radius: 4px;
+            content: "";
+        }
+
+        .bloque-tema:target>h3 {
+            color: var(--unach-azul-medio);
+        }
+
+        .explicacion-tema h4,
+        .explicacion-tema h5 {
+            color: var(--tinta);
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .explicacion-tema h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: var(--espacio-3) 0 var(--espacio-1);
+            font-size: 1.08rem;
+        }
+
+        .explicacion-tema h4::before {
+            flex: 0 0 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--unach-dorado);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+            content: "";
+        }
+
+        .explicacion-tema h5 {
+            margin: var(--espacio-2) 0 var(--espacio-1);
+            font-size: 1rem;
+        }
+
+        .explicacion-tema p,
+        .importancia-lidts p {
+            max-width: var(--ancho-lectura);
+            margin-bottom: var(--espacio-2);
+            color: #2c3547;
+            text-align: left;
+        }
+
+        .explicacion-tema ul,
+        .explicacion-tema ol {
+            padding-left: 1.5rem;
+        }
+
+        .explicacion-tema li::marker {
+            color: var(--unach-dorado);
+            font-weight: 700;
+        }
+
+        .lista-jerarquia,
+        .lista-detallada {
+            margin: var(--espacio-1) 0 var(--espacio-2);
+        }
+
+        .lista-jerarquia li,
+        .lista-detallada li {
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
+
+        .lista-detallada ul {
+            margin: 4px 0 var(--espacio-1);
+        }
+
+        code {
+            padding: 2px 7px;
+            color: var(--tinta);
+            background: var(--fondo-tenue);
+            border: 1px solid var(--borde);
+            border-radius: 6px;
+            font-family: 'Cascadia Code', Consolas, monospace;
+            font-size: 0.88em;
+        }
+
+        .contenedor-piramide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            max-width: 780px;
+            margin: var(--espacio-4) auto;
+            padding: var(--espacio-3);
+            background: var(--fondo-suave);
+            border: var(--linea);
+            border-radius: var(--radio-lg);
+            box-shadow: var(--sombra-sm);
+        }
+
+        .titulo-diagrama {
+            max-width: none !important;
+            margin-bottom: var(--espacio-1) !important;
+            color: var(--tinta) !important;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-align: center !important;
+            text-transform: uppercase;
+        }
+
+        .nivel-piramide {
+            padding: 12px var(--espacio-2);
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px -4px rgba(60, 42, 25, 0.35);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            text-align: center;
+            transition: transform var(--transicion), box-shadow var(--transicion);
+        }
+
+        .nivel-piramide:hover {
+            box-shadow: 0 10px 20px -8px rgba(60, 42, 25, 0.45);
+            transform: scale(1.02);
+        }
+
+        .nivel-piramide strong {
+            color: inherit;
+        }
+
+        .nivel-piramide.n1 {
+            width: 52%;
+            background: var(--mostaza);
+        }
+
+        .nivel-piramide.n2 {
+            width: 64%;
+            background: var(--terracota);
+        }
+
+        .nivel-piramide.n3 {
+            width: 76%;
+            background: var(--vino);
+        }
+
+        .nivel-piramide.n4 {
+            width: 88%;
+            background: var(--petroleo);
+        }
+
+        .nivel-piramide.n5 {
+            width: 100%;
+            background: var(--verde);
+        }
+
+        .nivel-piramide.cohn-e2e {
+            width: 58%;
+            background: var(--mostaza);
+        }
+
+        .nivel-piramide.cohn-int {
+            width: 79%;
+            background: var(--terracota);
+        }
+
+        .nivel-piramide.cohn-unit {
+            width: 100%;
+            background: var(--verde);
+        }
+
+        .columnas-dobles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: var(--espacio-3);
+            margin: var(--espacio-3) 0;
+        }
+
+        .columna {
+            position: relative;
+            padding: var(--espacio-3);
+            background: var(--fondo-superficie);
+            border: var(--linea);
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-sm);
+            transition: border-color var(--transicion), box-shadow var(--transicion), transform var(--transicion);
+        }
+
+        .columna:hover {
+            border-color: var(--acento, var(--mostaza));
+            box-shadow: var(--sombra);
+            transform: translateY(-3px);
+        }
+
+        .columna h5 {
+            margin: 0 0 var(--espacio-2);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--acento, var(--mostaza));
+        }
+
+        .columna ul,
+        .columna ol {
+            margin-left: var(--espacio-1);
+        }
+
+        .columna li {
+            margin-bottom: 10px;
+            font-size: 0.94rem;
+        }
+
+        .tabla-comparativa {
+            width: 100%;
+            margin: var(--espacio-3) 0;
+            overflow: hidden;
+            border: var(--linea);
+            border-collapse: separate;
+            border-radius: var(--radio);
+            border-spacing: 0;
+            box-shadow: var(--sombra-sm);
+            font-size: 0.92rem;
+        }
+
+        .tabla-comparativa thead {
+            color: #fff;
+            background: var(--acento, var(--fondo-oscuro));
+        }
+
+        .tabla-comparativa th {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .tabla-comparativa th,
+        .tabla-comparativa td {
+            padding: 14px 16px;
+            border-bottom: var(--linea);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .tabla-comparativa tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .tabla-comparativa tbody tr:nth-child(even) {
+            background: var(--fondo-suave);
+        }
+
+        .tabla-comparativa tbody tr {
+            transition: background-color var(--transicion);
+        }
+
+        .tabla-comparativa tbody tr:hover {
+            background: var(--fondo-dorado-tenue);
+        }
+
+        .tabla-comparativa td:first-child strong {
+            color: var(--tinta);
+        }
+
+        .importancia-lidts {
+            position: relative;
+            margin-top: var(--espacio-3);
+            padding: var(--espacio-3) var(--espacio-3) var(--espacio-3) calc(var(--espacio-3) + 48px);
+            background: var(--acento-fondo, var(--fondo-tenue));
+            border: 1px solid var(--borde);
+            border-left: 4px solid var(--acento, var(--terracota));
+            border-radius: var(--radio);
+        }
+
+        .importancia-lidts::before {
+            position: absolute;
+            top: var(--espacio-3);
+            left: var(--espacio-3);
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            color: #fff;
+            background: var(--acento, var(--terracota));
+            border-radius: 10px;
+            font-family: 'Cascadia Code', Consolas, monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            content: "</>";
+        }
+
+        .importancia-lidts h4 {
+            margin-bottom: 6px;
+            color: var(--tinta);
+            font-size: 1.02rem;
+            font-weight: 800;
+        }
+
+        .importancia-lidts p {
+            margin-bottom: 0;
+            font-size: 0.96rem;
+        }
+
+        .actividad-ludica {
+            position: relative;
+            margin: var(--espacio-5) 0;
+            padding: var(--espacio-4);
+            background: var(--fondo-dorado-tenue);
+            border: 1px dashed var(--mostaza);
+            border-radius: var(--radio-lg);
+        }
+
+        .actividad-ludica::before {
+            display: inline-block;
+            margin-bottom: var(--espacio-1);
+            padding: 4px 12px;
+            color: #fff;
+            background: var(--mostaza);
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            content: "Actividad interactiva";
+        }
+
+        .actividad-ludica:target {
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.5), var(--sombra);
+        }
+
+        .actividad-ludica h4 {
+            margin-bottom: var(--espacio-1);
+            color: var(--tinta);
+            font-family: var(--fuente-titulos);
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .actividad-ludica>p {
+            max-width: var(--ancho-lectura);
+            margin-bottom: var(--espacio-2);
+            color: var(--texto-secundario);
+        }
+
+        .pregunta-juego {
+            margin-top: var(--espacio-2);
+            padding: var(--espacio-3);
+            background: var(--fondo-superficie);
+            border: var(--linea);
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-sm);
+        }
+
+        .pregunta-juego>p:first-child {
+            margin-bottom: var(--espacio-2);
+            color: var(--texto-principal);
+            line-height: 1.55;
+        }
+
+        .btn-opcion {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 12px 16px;
+            color: var(--texto-principal);
+            background: var(--fondo-suave);
+            border: 1.5px solid var(--borde);
+            border-radius: var(--radio-sm);
+            font: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color var(--transicion), border-color var(--transicion), transform var(--transicion), box-shadow var(--transicion);
+        }
+
+        .btn-opcion:hover {
+            background: var(--fondo-tenue);
+            border-color: var(--unach-azul-claro);
+            box-shadow: 0 4px 12px -6px rgba(60, 42, 25, 0.35);
+            transform: translateX(4px);
+        }
+
+        .btn-opcion:active {
+            transform: translateX(4px) scale(0.99);
+        }
+
+        .btn-opcion.seleccion-correcta {
+            color: #145c33;
+            background: var(--fondo-exito);
+            border-color: var(--exito);
+            font-weight: 700;
+            animation: rebote 400ms ease;
+        }
+
+        .btn-opcion.seleccion-incorrecta {
+            color: #8e2a20;
+            background: var(--fondo-error);
+            border-color: var(--error);
+            animation: sacudir 380ms ease;
+        }
+
+        @keyframes rebote {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes sacudir {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-6px);
+            }
+
+            40% {
+                transform: translateX(6px);
+            }
+
+            60% {
+                transform: translateX(-4px);
+            }
+
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
+        .mensaje-juego {
+            min-height: 1.5em;
+            margin-top: var(--espacio-1);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .mensaje-juego.correcto,
+        .mensaje-juego.incorrecto {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+        }
+
+        .mensaje-juego.correcto {
+            color: var(--exito);
+            background: var(--fondo-exito);
+        }
+
+        .mensaje-juego.incorrecto {
+            color: var(--error);
+            background: var(--fondo-error);
+        }
+
+        .contenedor-flashcards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+            gap: var(--espacio-2);
+            margin-top: var(--espacio-2);
+        }
+
+        .tarjeta-memoria {
+            position: relative;
+            display: flex;
+            overflow: hidden;
+            min-height: 180px;
+            flex-direction: column;
+            justify-content: center;
+            gap: var(--espacio-1);
+            padding: var(--espacio-3);
+            color: var(--texto-principal);
+            background: var(--fondo-superficie);
+            border: 1.5px solid var(--borde);
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-sm);
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background var(--transicion), border-color var(--transicion), box-shadow var(--transicion), transform var(--transicion), color var(--transicion);
+        }
+
+        .tarjeta-memoria::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--acento-dorado);
+            content: "";
+        }
+
+        .tarjeta-memoria:hover {
+            border-color: var(--unach-azul-claro);
+            box-shadow: var(--sombra);
+            transform: translateY(-5px) rotate(-0.4deg);
+        }
+
+        .tarjeta-memoria strong {
+            line-height: 1.4;
+        }
+
+        .respuesta-carta {
+            max-height: 0;
+            margin: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(6px);
+            font-size: 0.95rem;
+            line-height: 1.55;
+            transition: max-height 300ms ease, margin 300ms ease, opacity 300ms ease, transform 300ms ease;
+        }
+
+        .tarjeta-memoria.abierta {
+            color: #fff;
+            background: var(--acento, var(--fondo-oscuro));
+            border-color: var(--unach-dorado);
+            box-shadow: 0 14px 30px -12px rgba(60, 42, 25, 0.55);
+        }
+
+        .tarjeta-memoria.abierta .respuesta-carta {
+            max-height: 14em;
+            margin: 6px 0;
+            color: #fffaf2;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .indicador-carta {
+            display: inline-block;
+            align-self: center;
+            margin-top: 4px;
+            padding: 3px 12px;
+            color: var(--tinta);
+            background: var(--fondo-tenue);
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .tarjeta-memoria.abierta .indicador-carta {
+            color: var(--tinta);
+            background: var(--unach-dorado-claro);
+        }
+
+        .bibliografia-apartado {
+            margin-top: var(--espacio-4);
+            padding: var(--espacio-3);
+            background: var(--fondo-suave);
+            border: var(--linea);
+            border-radius: var(--radio);
+        }
+
+        .bibliografia-apartado h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: var(--espacio-2);
+            color: var(--tinta);
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .lista-apa {
+            list-style: none;
+        }
+
+        .lista-apa li {
+            margin-bottom: 10px;
+            padding-left: 2rem;
+            color: var(--texto-secundario);
+            font-size: 0.87rem;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+            text-indent: -2rem;
+        }
+
+        .lista-apa li em {
+            color: var(--texto-principal);
+        }
+
+        footer.pie-pagina {
+            position: relative;
+            margin-top: var(--espacio-6);
+            padding: var(--espacio-5) var(--espacio-3);
+            color: #d5dccf;
+            background: var(--fondo-oscuro);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        footer.pie-pagina::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--acento-dorado);
+            content: "";
+        }
+
+        footer.pie-pagina p {
+            margin: 6px 0;
+        }
+
+        footer.pie-pagina strong {
+            color: #fff;
+        }
+
+        @media (hover: none) {
+
+            .columna:hover,
+            .tarjeta-memoria:hover,
+            .integrante:hover,
+            .nivel-piramide:hover {
+                transform: none;
+            }
+
+            .btn-opcion:hover {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .membrete-contenedor {
+                grid-template-columns: 1fr;
+                gap: var(--espacio-4);
+            }
+
+            .membrete-datos {
+                max-width: 560px;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .contenedor-principal {
+                grid-template-columns: 1fr;
+                gap: var(--espacio-3);
+            }
+
+            aside.indice-navegacion {
+                position: static;
+                max-height: none;
+            }
+
+            .bloque-subcompetencia {
+                padding: var(--espacio-4) var(--espacio-3);
+            }
+
+            .encabezado-subcompetencia {
+                margin: calc(var(--espacio-4) * -1) calc(var(--espacio-3) * -1) var(--espacio-3);
+                padding: calc(var(--espacio-4) + 5px) var(--espacio-3) var(--espacio-3);
+            }
+
+            .nivel-piramide.n1,
+            .nivel-piramide.n2,
+            .nivel-piramide.n3,
+            .nivel-piramide.n4,
+            .nivel-piramide.cohn-e2e,
+            .nivel-piramide.cohn-int {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                font-size: 15px;
+            }
+
+            header.membrete {
+                padding: var(--espacio-5) var(--espacio-2) var(--espacio-6);
+            }
+
+            .membrete-datos {
+                padding: var(--espacio-2);
+            }
+
+            .contenedor-principal {
+                padding: 0 12px;
+            }
+
+            .bloque-subcompetencia {
+                padding: var(--espacio-3) var(--espacio-2);
+                border-radius: var(--radio);
+            }
+
+            .encabezado-subcompetencia {
+                margin: calc(var(--espacio-3) * -1) calc(var(--espacio-2) * -1) var(--espacio-3);
+                padding: calc(var(--espacio-3) + 5px) var(--espacio-2) var(--espacio-2);
+            }
+
+            .tabla-comparativa {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .actividad-ludica {
+                padding: var(--espacio-2);
+            }
+
+            .importancia-lidts {
+                padding: var(--espacio-2);
+                padding-top: calc(var(--espacio-2) + 44px);
+            }
+
+            .importancia-lidts::before {
+                top: var(--espacio-2);
+                left: var(--espacio-2);
+            }
+
+            .cofre-oculto {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            #fortnite-toast {
+                gap: var(--espacio-1);
+                padding: 12px;
+            }
+
+            .token-titulo {
+                font-size: 1rem;
+            }
+
+            .btn-subir {
+                right: 16px;
+                bottom: 16px;
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media print {
+            :root {
+                --fondo-pagina: #fff;
+            }
+
+            body {
+                color: #000;
+                background: #fff;
+                font-size: 10.5pt;
+                line-height: 1.45;
+            }
+
+            aside.indice-navegacion,
+            #fortnite-toast,
+            .actividad-ludica,
+            .cofre-oculto,
+            .barra-lectura,
+            .btn-subir {
+                display: none !important;
+            }
+
+            header.membrete {
+                padding: 16pt 0;
+                color: #000;
+                background: #fff;
+                border-bottom: 2px solid var(--tinta);
+            }
+
+            header.membrete::before,
+            header.membrete::after {
+                display: none;
+            }
+
+            .membrete-titulos h1,
+            .membrete-titulos h2,
+            .membrete-titulos h3,
+            .membrete-datos,
+            .nombre-integrante,
+            .chip {
+                color: #000;
+            }
+
+            .membrete-datos,
+            .integrante,
+            .chip {
+                background: #fff;
+                border-color: #ccc;
+                box-shadow: none;
+            }
+
+            .contenedor-principal {
+                display: block;
+                max-width: none;
+                margin: 16pt 0;
+                padding: 0;
+            }
+
+            .bloque-subcompetencia,
+            .columna,
+            .contenedor-piramide,
+            .bibliografia-apartado {
+                background: #fff;
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            .bloque-subcompetencia {
+                margin-bottom: 18pt;
+                padding: 14pt;
+            }
+
+            .encabezado-subcompetencia {
+                margin: -14pt -14pt 12pt;
+                padding: 14pt;
+            }
+
+            .bloque-tema {
+                break-inside: auto;
+            }
+
+            .tabla-comparativa,
+            .columnas-dobles,
+            .importancia-lidts {
+                break-inside: avoid;
+            }
+
+            footer.pie-pagina {
+                margin-top: 16pt;
+                color: #000;
+                background: #fff;
+                border-top: 1px solid var(--tinta);
+            }
+
+            footer.pie-pagina strong {
+                color: #000;
+            }
+
+            a {
+                color: #000;
+                text-decoration: none;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="barra-lectura" id="barra-lectura"></div>
+
+
+    <a href="#inicio" class="btn-subir" id="btn-subir" aria-label="Volver al inicio">&#8593;</a>
+
+
+    <div id="fortnite-toast">
+        <div class="token-icon">&#9760;</div>
+        <div class="token-texto">
+            <p class="token-rareza">&#9733; RECOMPENSA DE CAZA DEL TESORO &#9733;</p>
+            <h2 class="token-titulo">¡FELICIDADES! CONSEGUISTE EL TOKEN PIRATA</h2>
+            <p class="token-sub">ACCESO A LA TIENDA PIRATA DESBLOQUEADO (14 DIAS GRATIS)</p>
+        </div>
+    </div>
+
+
+    <header class="membrete" id="inicio">
+        <div class="membrete-contenedor">
+            <div class="membrete-titulos">
+                <div class="membrete-logo-fila">
+                    <img src="https://www.facultadmaya.unach.mx/images/archivos/logo_unach_azul_sin_fondo_2.png"
+                        alt="Logo UNACH" class="logo-unach">
+                    <span class="membrete-insignia">Blog Académico - LIDTS</span>
+                </div>
+                <h1>Proyecto Integrador Final de Desarrollo Humano</h1>
+                <h2>Licenciatura en Ingeniería en Desarrollo y Tecnologías de Software (LIDTS)</h2>
+                <h3>UNIVERSIDAD AUTÓNOMA DE CHIAPAS</h3>
+                <div class="membrete-chips">
+                    <span class="chip"><strong>Unidad de Competencia:</strong> Desarrollo Humano</span>
+                    <span class="chip"><strong>Lugar y Fecha:</strong> Tuxtla Gutiérrez, Chiapas; Noviembre de
+                        2026</span>
+                </div>
+            </div>
+            <div class="membrete-datos">
+                <p class="membrete-datos-titulo">Integrantes</p>
+                <ul class="lista-integrantes">
+                    <li class="integrante">
+                        <span class="avatar-integrante">AZ</span>
+                        <span class="nombre-integrante">Alejandro Moctezuma Zenteno Hernández</span>
+                    </li>
+                    <li class="integrante">
+                        <span class="avatar-integrante">JR</span>
+                        <span class="nombre-integrante">Joaquín Alberto Ruiz Agustín</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="contenedor-principal">
+        <aside class="indice-navegacion">
+            <h2>Índice General</h2>
+            <nav>
+                <ul class="lista-indice">
+                    <li>
+                        <a href="#subcompetencia-1">S1. Importancia del desarrollo humano</a>
+                        <ul class="sublista-indice">
+                            <li><a href="#s1-tema-1">1.1. ¿Qué es el desarrollo humano?</a></li>
+                            <li><a href="#s1-tema-2">1.2. Pirámide de Maslow y Pirámide de Cohn</a></li>
+                            <li><a href="#s1-tema-3">1.3. Temperamento, Carácter y Personalidad</a></li>
+                            <li><a href="#s1-tema-4">1.4. Recursos Individuales y Rol Ciudadano</a></li>
+                            <li><a href="#s1-tema-5">1.5. Asunción de la realidad personal</a></li>
+                            <li><a href="#s1-ludica">Actividad Lúdica S1</a></li>
+                            <li><a href="#s1-bibliografia">Bibliografía APA 7 (S1)</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#subcompetencia-2">S2. Equilibrio y desarrollo personal</a>
+                        <ul class="sublista-indice">
+                            <li><a href="#s2-tema-1">2.1. El equilibrio y la superación personal</a></li>
+                            <li><a href="#s2-tema-2">2.2. Índices de calidad de vida</a></li>
+                            <li><a href="#s2-tema-3">2.3. Plan de vida</a></li>
+                            <li><a href="#s2-ludica">Actividad Lúdica S2 (Cartas 1-3)</a></li>
+                            <li><a href="#s2-bibliografia">Bibliografía APA 7 (S2)</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#subcompetencia-3">S3. Potencialidad humana</a>
+                        <ul class="sublista-indice">
+                            <li><a href="#s3-tema-1">3.1. Potencialidades humanas</a></li>
+                            <li><a href="#s3-tema-2">3.2. Autoconocimiento y Autoconcepto</a></li>
+                            <li><a href="#s3-tema-3">3.3. Autoestima (Enfoque para tecnólogos)</a></li>
+                            <li><a href="#s3-ludica">Actividad Lúdica S3</a></li>
+                            <li><a href="#s3-bibliografia">Bibliografía APA 7 (S3)</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#subcompetencia-4">S4. Valores</a>
+                        <ul class="sublista-indice">
+                            <li><a href="#s4-tema-1">4.1. ¿Qué son los valores?</a></li>
+                            <li><a href="#s4-tema-2">4.2. Concepción y Clasificación de Valores</a></li>
+                            <li><a href="#s4-tema-3">4.3. Ciencia, Tecnología y Ética</a></li>
+                            <li><a href="#s4-ludica">Actividad Lúdica S4</a></li>
+                            <li><a href="#s4-bibliografia">Bibliografía APA 7 (S4)</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#subcompetencia-5">S5. Cultura</a>
+                        <ul class="sublista-indice">
+                            <li><a href="#s5-tema-1">5.1. La cultura</a></li>
+                            <li><a href="#s5-tema-2">5.2. Cultura en adopción y desarrollo tecnológico</a></li>
+                            <li><a href="#s5-tema-3">5.3. Experiencias, Cultura social y organizacional</a></li>
+                            <li><a href="#s5-ludica">Actividad Lúdica S5 (Cartas 4-6)</a></li>
+                            <li><a href="#s5-bibliografia">Bibliografía APA 7 (S5)</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#subcompetencia-6">S6. Compromiso con el medio ambiente</a>
+                        <ul class="sublista-indice">
+                            <li><a href="#s6-tema-1">6.1. Huella ecológica digital</a></li>
+                            <li><a href="#s6-ludica">Actividad Lúdica S6</a></li>
+                            <li><a href="#s6-bibliografia">Bibliografía APA 7 (S6)</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#conclusiones">Conclusiones Finales</a></li>
+                </ul>
+            </nav>
+            <div class="contador-cartas-panel">
+                <p><strong>Progreso de Cartas:</strong> <span id="progreso-cartas">0 / 6</span></p>
+                <div class="barra-cartas"><span id="barra-cartas-relleno"></span></div>
+                <small>Abre las 6 cartas del blog para desbloquear el Easter Egg.</small>
+            </div>
+        </aside>
+
+
+        <main class="contenido-blog">
+
+            <section id="subcompetencia-1" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Subcompetencia 1</span>
+                    <h2>Comprende la importancia del desarrollo humano</h2>
+                </header>
+
+
+                <article id="s1-tema-1" class="bloque-tema">
+                    <h3>1.1. ¿Qué es el desarrollo humano?</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            De acuerdo con el Centro Europeo de Postgrado (CEUPE, s.f.), el desarrollo humano se refiere
+                            al proceso mediante el cual las personas adquieren habilidades, conocimientos y capacidades
+                            que les permiten llevar una vida plena y satisfactoria. Este concepto trasciende las simples
+                            medidas económicas, como el ingreso per cápita, para centrarse en el bienestar integral del
+                            individuo mediante la expansión de las libertades y oportunidades necesarias para vivir de
+                            manera digna y alcanzar su máximo potencial.
+                        </p>
+                        <p>
+                            El enfoque del desarrollo humano sostiene que cada persona tiene el derecho de desarrollarse
+                            plenamente en todas las áreas de su vida: acceso a la educación, salud, participación en la
+                            vida social y política, y autonomía para tomar decisiones que afectan su existencia,
+                            constituyendo un proceso continuo desde la infancia hasta la vejez (CEUPE, s.f.).
+                        </p>
+                    </div>
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En la Licenciatura en Ingeniería en Desarrollo y Tecnologías de Software (LIDTS), comprender
+                            el desarrollo humano recuerda al ingeniero que toda solución tecnológica tiene como fin
+                            último ampliar las capacidades y libertades de las personas. Desarrollar software accesible,
+                            intuitivo y ético democratiza el acceso a la educación, la salud y la información pública,
+                            impulsando el bienestar integral de la sociedad.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s1-tema-2" class="bloque-tema">
+                    <h3>1.2. La Pirámide de Maslow y la Pirámide de Pruebas de Mike Cohn</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada: Jerarquía de Necesidades de Maslow</h4>
+                        <p>
+                            La pirámide de Maslow representa una jerarquía de necesidades humanas y explica que, a
+                            medida que los individuos van satisfaciendo las necesidades más básicas de "manera
+                            razonable", desarrollan nuevas necesidades y deseos más elevados (Instituto Europeo de
+                            Psicología Positiva [IEPP], s.f.). Fue propuesta por el psiquiatra y psicólogo humanista
+                            Abraham Maslow en 1943 en su obra <em>"Teoría de la Motivación Humana"</em>, profundizando
+                            en aquello que impulsa al ser humano a actuar de manera intrínseca más allá de premios y
+                            castigos externos.
+                        </p>
+
+                        <div class="contenedor-piramide">
+                            <p class="titulo-diagrama">Jerarquía de la Pirámide de Maslow (Cúspide a Base)</p>
+                            <div class="nivel-piramide n1"><strong>5. Autorrealización:</strong> Moralidad, creatividad,
+                                espontaneidad, falta de prejuicios, aceptación de hechos, resolución de problemas.</div>
+                            <div class="nivel-piramide n2"><strong>4. Reconocimiento:</strong> Autorreconocimiento,
+                                confianza, respeto, éxito.</div>
+                            <div class="nivel-piramide n3"><strong>3. Afiliación:</strong> Amistad, afecto, intimidad
+                                sexual.</div>
+                            <div class="nivel-piramide n4"><strong>2. Seguridad:</strong> Seguridad física, de empleo,
+                                de recursos, moral, familiar, de salud, de propiedad privada.</div>
+                            <div class="nivel-piramide n5"><strong>1. Fisiología (Base):</strong> Respiración,
+                                alimentación, descanso, sexo, homeostasis.</div>
+                        </div>
+
+                        <h4>Explicación sustentada: Pirámide de Pruebas de Software (Mike Cohn)</h4>
+                        <p>
+                            El ingeniero de software y pionero de Scrum, Mike Cohn, introdujo la <strong>pirámide de
+                                pruebas</strong> en su libro de 2009 <em>Succeeding with Agile: Software Development
+                                Using Scrum</em> para abordar los desafíos de las pruebas automatizadas en metodologías
+                            ágiles, proponiendo una distribución general aproximada de <strong>70/20/10</strong> (Cohn,
+                            2009; CircleCI, s.f.):
+                        </p>
+                        <ul class="lista-detallada">
+                            <li><strong>Pruebas unitarias (70% - Base):</strong> Se centran en una única funcionalidad y
+                                en pequeñas unidades de código. Son pruebas de <em>caja abierta</em> (el evaluador
+                                conoce el funcionamiento interno y la estructura del código), numerosas, rápidas y
+                                económicas de ejecutar en procesos de integración continua para garantizar que los
+                                nuevos cambios no dañen la funcionalidad existente.</li>
+                            <li><strong>Pruebas de integración (20% - Nivel central):</strong> Verifican la interacción
+                                entre diferentes módulos o sistemas externos. Son menos numerosas, más costosas y más
+                                lentas que las unitarias, ejecutándose después de integrar cambios importantes en la
+                                rama principal como pruebas de <em>caja cerrada</em>.</li>
+                            <li><strong>Pruebas de extremo a extremo o E2E (10% - Cúspide):</strong> Implican la
+                                verificación de toda la aplicación tal como la experimentarían los usuarios finales
+                                (interfaces de usuario, API, bases de datos y servicios). Al ser pruebas de <em>caja
+                                    cerrada</em> complejas y de mayor consumo de tiempo y recursos, se ejecutan en hitos
+                                críticos antes de los lanzamientos.</li>
+                        </ul>
+
+                        <div class="contenedor-piramide">
+                            <p class="titulo-diagrama">Pirámide de Pruebas de Software de Mike Cohn (70 / 20 / 10)</p>
+                            <div class="nivel-piramide cohn-e2e"><strong>10% - End-to-End Testing (E2E):</strong> Caja
+                                cerrada - Más complejas y costosas - Flujo completo de usuario.</div>
+                            <div class="nivel-piramide cohn-int"><strong>20% - Integration Testing:</strong> Caja
+                                cerrada - Verifican la interacción entre módulos y servicios.</div>
+                            <div class="nivel-piramide cohn-unit"><strong>70% - Unit Testing (Base):</strong> Caja
+                                abierta - Rápidas, numerosas y económicas - Pequeñas unidades de código.</div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            Ambos modelos comparten un principio estructural indispensable en LIDTS: <strong>la
+                                estabilidad de la cúspide depende de la solidez de la base</strong>. Un equipo de
+                            desarrollo necesita tener cubiertas sus necesidades fisiológicas, de seguridad y de
+                            pertenencia (Maslow) para alcanzar la creatividad y resolución de problemas complejos
+                            (autorrealización). De igual manera, un sistema de software requiere una base robusta de
+                            pruebas unitarias (70%) para que la integración (20%) y la experiencia final del usuario en
+                            las pruebas E2E (10%) funcionen sin colapsar en producción.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s1-tema-3" class="bloque-tema">
+                    <h3>1.3. Temperamento, Carácter y Personalidad</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            El <strong>temperamento</strong> es la parte biológica e innata con la que nacemos; el
+                            <strong>carácter</strong> se forma a través de las experiencias, la educación y el entorno
+                            social; y la <strong>personalidad</strong> es la suma total de ambos elementos, reflejando
+                            cómo pensamos, sentimos y actuamos en nuestra vida diaria (Cloninger, 2003).
+                        </p>
+
+                        <table class="tabla-comparativa">
+                            <thead>
+                                <tr>
+                                    <th>Dimensión</th>
+                                    <th>Origen</th>
+                                    <th>Momento</th>
+                                    <th>Cambio</th>
+                                    <th>Ejemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Temperamento</strong></td>
+                                    <td>Genético y biológico (sistema nervioso y hormonas).</td>
+                                    <td>Se manifiesta desde los primeros meses de vida.</td>
+                                    <td>Es muy estable y difícil de modificar.</td>
+                                    <td>Reaccionar con rapidez o calma ante un ruido fuerte de forma espontánea.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Carácter</strong></td>
+                                    <td>Ambiental, cultural y educativo.</td>
+                                    <td>Se desarrolla y se pule durante la infancia y adolescencia.</td>
+                                    <td>Se puede modificar y moldear con esfuerzo consciente y madurez.</td>
+                                    <td>La paciencia, la honestidad o la perseverancia que aprendemos con los años.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Personalidad</strong></td>
+                                    <td>La unión de la biología (temperamento) y la experiencia (carácter).</td>
+                                    <td>Se consolida de forma global al llegar a la edad adulta.</td>
+                                    <td>Es relativamente estable, pero evoluciona ante vivencias importantes.</td>
+                                    <td>Ser una persona introvertida (<em>temperamento</em>) pero justa y trabajadora
+                                        (<em>carácter</em>).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En el trabajo colaborativo de ingeniería de software, distinguir entre temperamento y
+                            carácter permite liderar y convivir con perfiles diversos. Más allá de si un programador
+                            posee un temperamento introvertido o extrovertido, el desarrollo consciente de su carácter
+                            (perseverancia ante errores complejos, honestidad técnica y paciencia durante revisiones de
+                            código) determina su profesionalismo en LIDTS.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s1-tema-4" class="bloque-tema">
+                    <h3>1.4. Recursos Individuales en la Acción Ciudadana y el Rol del Ciudadano en la Comunidad</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            La identificación de recursos individuales permite reconocer las capacidades, conocimientos
+                            y herramientas propias de cada persona para incidir en su entorno, mientras que el rol
+                            ciudadano define la responsabilidad activa en la vida pública, la defensa de derechos y la
+                            construcción del bienestar comunitario (Programa de las Naciones Unidas para el Desarrollo
+                            [PNUD], 2022).
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Recursos Individuales en la Acción Ciudadana</h5>
+                                <ul>
+                                    <li><strong>Habilidades y talentos:</strong> Capacidades personales como la
+                                        comunicación, el liderazgo, el diseño o la organización logística que se pueden
+                                        aportar a proyectos colectivos.</li>
+                                    <li><strong>Conocimiento y saberes:</strong> Formación académica, experiencia
+                                        laboral o conocimientos técnicos útiles para resolver problemas específicos del
+                                        vecindario o la ciudad.</li>
+                                    <li><strong>Tiempo y disponibilidad:</strong> El margen de acción personal que se
+                                        decide invertir en actividades comunitarias, voluntariados o espacios de diálogo
+                                        público.</li>
+                                    <li><strong>Redes de contacto:</strong> Relaciones interpersonales y vínculos
+                                        familiares, laborales o sociales que facilitan la convocatoria y la difusión de
+                                        iniciativas.</li>
+                                    <li><strong>Acceso a información y tecnología:</strong> Uso de herramientas
+                                        digitales y canales de transparencia para fiscalizar y proponer mejoras en la
+                                        gestión pública.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>El Rol del Ciudadano en la Comunidad</h5>
+                                <ul>
+                                    <li><strong>Participación activa:</strong> Ir más allá del voto electoral mediante
+                                        la intervención en presupuestos participativos, consultas o asambleas locales.
+                                    </li>
+                                    <li><strong>Corresponsabilidad social:</strong> Asumir el cuidado del espacio
+                                        público, el respeto a la diversidad y la protección del medio ambiente.</li>
+                                    <li><strong>Vigilancia y exigencia:</strong> Monitorear el trabajo de las
+                                        autoridades, exigir rendición de cuentas y utilizar herramientas legales como el
+                                        derecho de petición.</li>
+                                    <li><strong>Articulación comunitaria:</strong> Fomentar la cohesión social
+                                        colaborando con vecinos y organizaciones civiles para atender carencias locales.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            El estudiante y profesionista de LIDTS cuenta con conocimientos técnicos y dominio
+                            tecnológico que constituyen recursos individuales de alto impacto social. Mediante el
+                            desarrollo de aplicaciones cívicas, portales de datos abiertos y automatización de servicios
+                            comunitarios, el ingeniero de software fortalece la transparencia y articula soluciones para
+                            su ciudad y estado.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s1-tema-5" class="bloque-tema">
+                    <h3>1.5. Asunción de la realidad personal y la situación de vida</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            La asunción de la realidad personal y la situación de vida es el acto consciente de aceptar
+                            sin resistencia el punto exacto en el que te encuentras hoy. Significa dejar de negar las
+                            circunstancias actuales para frenar el desgaste de energía y empezar a tomar decisiones
+                            prácticas basadas en hechos reales.
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Claves para asumir tu situación actual</h5>
+                                <ul>
+                                    <li><strong>Cero culpa:</strong> Acepta lo que hay sin juzgarte ni castigar el
+                                        pasado.</li>
+                                    <li><strong>Verdad sin filtros:</strong> Mira tus finanzas, salud, trabajo y
+                                        relaciones tal como son hoy.</li>
+                                    <li><strong>Fin de la queja:</strong> Deja de gastar energía en desear que el punto
+                                        de partida fuera distinto.</li>
+                                    <li><strong>Punto cero:</strong> Entiende que este momento es solo tu base de
+                                        operación, no una condena fija.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>Pasos para avanzar desde la aceptación</h5>
+                                <ol>
+                                    <li><strong>Identifica lo que controlas:</strong> Separa los problemas que puedes
+                                        cambiar hoy de los factores externos que no dependen de ti.</li>
+                                    <li><strong>Pon metas pequeñas:</strong> Diseña acciones diarias muy fáciles de
+                                        cumplir para mejorar un solo aspecto a la vez.</li>
+                                    <li><strong>Ajusta tus expectativas:</strong> Alinea tus planes diarios con tus
+                                        recursos actuales reales y no con ideales lejanos.</li>
+                                    <li><strong>Monitorea tu avance:</strong> Revisa cada semana qué funciona y cambia
+                                        con rapidez lo que no da resultados.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En la gestión de proyectos de software, asumir la realidad sin filtros equivale a
+                            diagnosticar con objetividad el estado técnico de un sistema y los recursos disponibles
+                            (hardware, tiempo y conocimientos actuales). Dividir objetivos grandes en entregas
+                            incrementales (<em>metas pequeñas</em>) y evaluar resultados semanalmente (<em>monitoreo de
+                                avance</em> en retrospectivas) permite evolucionar de forma sostenida.
+                        </p>
+                    </div>
+                </article>
+
+
+                <div id="s1-ludica" class="actividad-ludica">
+                    <h4>Actividad Lúdica S1: Trivia Interactiva - Desarrollo Humano y Calidad de Software</h4>
+                    <p>Selecciona la opción correcta en cada pregunta para verificar tu dominio de la Subcompetencia 1:
+                    </p>
+
+                    <div class="pregunta-juego">
+                        <p><strong>1. Según la Pirámide de Pruebas de Mike Cohn (70/20/10), ¿qué nivel conforma el 70%
+                                de la base, opera como prueba de caja abierta y valida pequeñas unidades de
+                                código?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s1-1')">A)
+                            Pruebas Unitarias (Unit Testing)</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s1-1')">B)
+                            Pruebas de Extremo a Extremo (E2E)</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s1-1')">C)
+                            Pruebas de Integración de Caja Cerrada</button>
+                        <p id="msg-s1-1" class="mensaje-juego"></p>
+                    </div>
+
+                    <div class="pregunta-juego">
+                        <p><strong>2. ¿Cuál de los siguientes componentes tiene un origen ambiental, cultural y
+                                educativo, y se puede moldear con esfuerzo consciente y madurez (como la paciencia o la
+                                perseverancia)?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s1-2')">A) El
+                            Temperamento</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s1-2')">B) El
+                            Carácter</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s1-2')">C) Las
+                            Necesidades Fisiológicas</button>
+                        <p id="msg-s1-2" class="mensaje-juego"></p>
+                    </div>
+                </div>
+
+
+                <footer id="s1-bibliografia" class="bibliografia-apartado">
+                    <h4>Bibliografía del Apartado - Subcompetencia 1 (Formato APA 7)</h4>
+                    <ul class="lista-apa">
+                        <li>Centro Europeo de Postgrado [CEUPE]. (s.f.). <em>Desarrollo humano: ¿Qué es, tipos y cómo
+                                influye?</em> CEUPE Magazine.
+                            https://www.ceupe.com/blog/desarrollo-humano-que-es-tipos-y-como-influye.html</li>
+                        <li>CircleCI. (s.f.). <em>The testing pyramid: Strategic software testing for Agile teams</em>.
+                            CircleCI Blog. https://circleci.com/blog/testing-pyramid/</li>
+                        <li>Cloninger, S. C. (2003). <em>Teorías de la personalidad</em> (3.ª ed.). Pearson Educación.
+                        </li>
+                        <li>Cohn, M. (2009). <em>Succeeding with Agile: Software development using Scrum</em>.
+                            Addison-Wesley Professional.</li>
+                        <li>Instituto Europeo de Psicología Positiva [IEPP]. (s.f.). <em>Pirámide de Maslow: Qué es,
+                                niveles y ejemplos</em>. IEPP. https://www.iepp.es/piramide-de-maslow/</li>
+                        <li>Maslow, A. H. (1943). A theory of human motivation. <em>Psychological Review</em>, 50(4),
+                            370-396. https://doi.org/10.1037/h0054346</li>
+                        <li>Programa de las Naciones Unidas para el Desarrollo [PNUD]. (2022). <em>Informe sobre
+                                Desarrollo Humano: Tiempos inciertos, vidas inestables</em>. Naciones Unidas.</li>
+                    </ul>
+                </footer>
+            </section>
+
+
+            <section id="subcompetencia-2" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Subcompetencia 2</span>
+                    <h2>Equilibrio y desarrollo personal</h2>
+                </header>
+
+
+                <article id="s2-tema-1" class="bloque-tema">
+                    <h3>2.1. El equilibrio y la superación personal</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            El <strong>equilibrio y la superación personal</strong> son procesos continuos de
+                            transformación donde aprendes a gestionar tu bienestar físico, emocional y profesional
+                            (Goleman, 1995; Covey, 2003).
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Claves para el equilibrio personal</h5>
+                                <ul>
+                                    <li><strong>Autoconocimiento:</strong> Identifica qué quieres, qué te inspira y
+                                        cuáles son tus límites reales.</li>
+                                    <li><strong>Gestión del tiempo:</strong> Prioriza tareas y separa un espacio para el
+                                        descanso, ya que no es falta de compromiso sino renovación.</li>
+                                    <li><strong>Salud física y mental:</strong> Duerme lo suficiente, come de manera
+                                        saludable y practica la atención plena o autorreflexión.</li>
+                                    <li><strong>Inteligencia emocional:</strong> Desarrolla la autorregulación para
+                                        gestionar tus emociones en lugar de reprimirlas.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>Estrategias de superación</h5>
+                                <ul>
+                                    <li><strong>Establece objetivos claros:</strong> Visualiza tus metas y registra tus
+                                        avances de forma constante.</li>
+                                    <li><strong>Fomenta la resiliencia:</strong> Afronta los contratiempos con optimismo
+                                        y aprende de los errores sin abandonarlos.</li>
+                                    <li><strong>Aprende de forma continua:</strong> Lee, adquiere nuevos conocimientos y
+                                        mantén la mente abierta a opiniones diversas.</li>
+                                    <li><strong>Rodéate de apoyo:</strong> Comparte tus metas con amigos, familiares o
+                                        grupos que impulsen tu bienestar.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En el ámbito de LIDTS, mantener el equilibrio físico y mental previene el agotamiento
+                            profesional (<em>burnout</em>). La disciplina en el descanso, el ejercicio físico, la
+                            autorregulación emocional ante entregas críticas y el hábito del aprendizaje continuo
+                            permiten al desarrollador sostener un alto rendimiento cognitivo a lo largo de toda su
+                            carrera.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s2-tema-2" class="bloque-tema">
+                    <h3>2.2. Índices de calidad de vida</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            El índice de calidad de vida en México varía según la institución que lo mida, ubicando al
+                            país en el <strong>puesto 81 a nivel global</strong> según el índice de <em>Global Citizen
+                                Solutions</em> debido a retos en seguridad y costo de vida, aunque los mexicanos
+                            reportan una alta satisfacción personal con un promedio de <strong>8.62 sobre 10</strong> de
+                            acuerdo con el Instituto Nacional de Estadística y Geografía (INEGI, 2024).
+                        </p>
+
+                        <h5>Indicadores Clave</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Satisfacción personal:</strong> La mayoría de la población califica
+                                positivamente su entorno familiar, social y laboral.</li>
+                            <li><strong>Seguridad y entorno:</strong> El país presenta retos importantes en la tasa de
+                                homicidios y estrés ambiental en comparación con el promedio de la Organización para la
+                                Cooperación y el Desarrollo Económicos (OCDE).</li>
+                            <li><strong>Salud:</strong> La esperanza de vida promedio ronda los <strong>75.5
+                                    años</strong>, siendo mayor en mujeres (<strong>79 años</strong>) que en hombres
+                                (<strong>72 años</strong>).</li>
+                            <li><strong>Ciudades destacadas:</strong> Zonas como Mérida, Querétaro y San Luis Potosí
+                                suelen liderar los niveles de bienestar interno por su infraestructura y seguridad.</li>
+                        </ul>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            Para un ingeniero en LIDTS, analizar los índices de calidad de vida permite identificar
+                            áreas prioritarias donde el software puede generar impacto directo (sistemas de salud
+                            preventiva, seguridad ciudadana y monitoreo ambiental), además de orientar decisiones
+                            estratégicas sobre polos de desarrollo tecnológico en el país y modalidades de trabajo
+                            remoto.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s2-tema-3" class="bloque-tema">
+                    <h3>2.3. Plan de vida</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada: Enfoque Humanista / Existencial (Carl Rogers, Viktor Frankl)</h4>
+                        <p>
+                            <strong>Definición:</strong> Es un plan consciente y reflexivo enfocado en la búsqueda de
+                            sentido de la existencia, donde el sujeto ejerce su libertad y autodeterminación para elegir
+                            quién quiere ser y cómo realizarse (Rogers, 1961; Frankl, 2015).
+                        </p>
+
+                        <ol class="lista-detallada">
+                            <li>
+                                <strong>Rubro Académico:</strong> En el ámbito académico, estructurar un proyecto de
+                                vida le permite al estudiante asumir un compromiso directo con su propia formación
+                                intelectual y técnica. Dentro de una disciplina tan dinámica y demandante como la
+                                ingeniería de software, definir metas de aprendizaje facilita la adquisición de hábitos
+                                de estudio sólidos, el desarrollo del pensamiento crítico y la disciplina necesaria para
+                                dominar conceptos complejos, desde las ciencias computacionales hasta la resolución de
+                                problemas lógicos. Trazar este rumbo previene la improvisación, optimiza el rendimiento
+                                académico durante los semestres y fomenta una actitud de aprendizaje autónomo y
+                                continuo, indispensable para mantenerse al día con las constantes evoluciones
+                                tecnológicas.
+                            </li>
+                            <li>
+                                <strong>Rubro Personal:</strong> En la dimensión personal, el proyecto de vida actúa
+                                como una brújula para el autoconocimiento, la madurez emocional y el fortalecimiento de
+                                los valores individuales. La materia de Desarrollo Humano promueve la reflexión interna
+                                sobre las propias fortalezas, áreas de oportunidad y motivaciones profundas. Al
+                                articular este plan, el estudiante establece un equilibrio entre sus responsabilidades
+                                universitarias y su bienestar integral, cuidando su salud física y mental, fortaleciendo
+                                sus habilidades socioemocionales y desarrollando la resiliencia necesaria para afrontar
+                                la presión, los fracasos temporales y los retos cotidianos dentro y fuera del aula.
+                            </li>
+                            <li>
+                                <strong>Rubro Profesional:</strong> En el aspecto profesional, contar con un plan de
+                                vida trazado desde la etapa universitaria permite proyectar el perfil laboral al que se
+                                aspira ingresar una vez concluida la carrera. En el sector de las tecnologías de
+                                información, no basta con dominar la programación; se requiere visión estratégica, ética
+                                profesional, capacidad de trabajo en equipo y liderazgo. Un proyecto personal bien
+                                cimentado guía la elección de especializaciones, certificaciones, proyectos integradores
+                                y prácticas profesionales, orientando los esfuerzos hacia metas claras, como la
+                                innovación en desarrollo de software, la creación de soluciones tecnológicas
+                                sustentables o el emprendimiento de base tecnológica.
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            El Plan de Vida constituye la hoja de ruta (<em>roadmap</em>) del estudiante de LIDTS:
+                            integra su preparación universitaria en programación, bases de datos y electrónica con su
+                            salud física y emocional, proyectándolo hacia el ejercicio profesional formal,
+                            certificaciones internacionales y el desarrollo independiente de software.
+                        </p>
+                    </div>
+                </article>
+
+
+                <div id="s2-ludica" class="actividad-ludica">
+                    <h4>Actividad Lúdica S2: Tarjetas de Repaso - Equilibrio y Plan de Vida (Cartas 1 a 3)</h4>
+                    <p>Haz clic sobre cada carta para mostrar u ocultar la respuesta (abre todas las cartas del blog
+                        para desbloquear la recompensa secreta):</p>
+
+                    <div class="contenedor-flashcards">
+                        <div class="tarjeta-memoria" onclick="abrirCarta(this)">
+                            <strong>Carta 1: Promedio de Satisfacción Personal en México (INEGI)</strong>
+                            <p class="respuesta-carta">8.62 sobre 10, destacando la valoración positiva del entorno
+                                familiar, social y laboral.</p>
+                            <span class="indicador-carta">[Clic para abrir carta]</span>
+                        </div>
+
+                        <div class="tarjeta-memoria" onclick="abrirCarta(this)">
+                            <strong>Carta 2: Esperanza de Vida Promedio en México</strong>
+                            <p class="respuesta-carta">75.5 años en promedio general (79 años en mujeres y 72 años en
+                                hombres).</p>
+                            <span class="indicador-carta">[Clic para abrir carta]</span>
+                        </div>
+
+                        <div class="tarjeta-memoria" onclick="abrirCarta(this)">
+                            <strong>Carta 3: Autores del Enfoque Humanista / Existencial del Plan de Vida</strong>
+                            <p class="respuesta-carta">Carl Rogers y Viktor Frankl: búsqueda de sentido mediante la
+                                libertad y autodeterminación.</p>
+                            <span class="indicador-carta">[Clic para abrir carta]</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <footer id="s2-bibliografia" class="bibliografia-apartado">
+                    <h4>Bibliografía del Apartado - Subcompetencia 2 (Formato APA 7)</h4>
+                    <ul class="lista-apa">
+                        <li>Covey, S. R. (2003). <em>Los 7 hábitos de la gente altamente efectiva</em>. Paidós.</li>
+                        <li>Frankl, V. E. (2015). <em>El hombre en busca de sentido</em> (3.ª ed.). Herder Editorial.
+                        </li>
+                        <li>Global Citizen Solutions. (2024). <em>Global Passport Index: Quality of Life Index</em>.
+                            Global Citizen Solutions. https://www.globalcitizensolutions.com/</li>
+                        <li>Goleman, D. (1995). <em>La inteligencia emocional</em>. Kairos.</li>
+                        <li>Instituto Nacional de Estadística y Geografía [INEGI]. (2024). <em>Indicadores de Bienestar
+                                Autorreportado de la Población Urbana (BIARE)</em>. INEGI.
+                            https://www.inegi.org.mx/programas/biare/</li>
+                        <li>Organización para la Cooperación y el Desarrollo Económicos [OCDE]. (2024). <em>Índice para
+                                una Vida Mejor (Better Life Index): México</em>. OECD Publishing.
+                            https://www.oecdbetterlifeindex.org/es/countries/mexico-es/</li>
+                        <li>Rogers, C. R. (1961). <em>El proceso de convertirse en persona</em>. Paidós.</li>
+                    </ul>
+                </footer>
+            </section>
+
+
+            <section id="subcompetencia-3" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Subcompetencia 3</span>
+                    <h2>Potencialidad humana</h2>
+                </header>
+
+
+                <article id="s3-tema-1" class="bloque-tema">
+                    <h3>3.1. Potencialidades humanas</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            Las <strong>potencialidades del ser humano</strong> son el conjunto de capacidades, talentos
+                            y recursos latentes que cada persona posee de manera innata y que puede desarrollar a lo
+                            largo de su vida para alcanzar metas y transformar su entorno (Maslow, 1991; Rogers, 1961).
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Dimensiones principales del potencial humano</h5>
+                                <ul>
+                                    <li><strong>Cognitiva e Intelectual:</strong> Permite razonar, aprender, memorizar y
+                                        resolver problemas complejos.</li>
+                                    <li><strong>Emocional y Social:</strong> Facilita el autocontrol, la empatía, el
+                                        afecto y la adaptación a distintas situaciones.</li>
+                                    <li><strong>Creativa e Innovadora:</strong> Impulsa la creación de ideas, la
+                                        expresión artística y la búsqueda de nuevas soluciones.</li>
+                                    <li><strong>Física y Motora:</strong> Involucra el control del cuerpo, la destreza y
+                                        la energía para la acción.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>Factores que influyen en su desarrollo</h5>
+                                <ul>
+                                    <li><strong>La actitud:</strong> Es el motor principal; una actitud positiva y
+                                        motivada potencia cualquier habilidad adquirida o innata.</li>
+                                    <li><strong>El entorno y la educación:</strong> El acceso al aprendizaje, el apoyo
+                                        emocional y las experiencias de vida moldean estas capacidades.</li>
+                                    <li><strong>El autoconocimiento:</strong> Reconocer las propias fortalezas y aceptar
+                                        las limitaciones ayuda a trazar mejores estrategias de crecimiento personal.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            El desarrollo de software exige articular las cuatro dimensiones del potencial humano: la
+                            dimensión <strong>cognitiva</strong> para la abstracción algorítmica, la
+                            <strong>creativa</strong> para diseñar soluciones innovadoras, la <strong>emocional y
+                                social</strong> para comunicarse efectivamente con clientes y compañeros de equipo, y la
+                            <strong>física</strong> para conservar la vitalidad y concentración.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s3-tema-2" class="bloque-tema">
+                    <h3>3.2. Autoconocimiento y Autoconcepto</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            El <strong>autoconocimiento</strong> es el proceso de investigar e identificar quién eres
+                            (tus virtudes, defectos, valores y emociones), mientras que el <strong>autoconcepto</strong>
+                            es la imagen o conclusión mental resultante de cómo te describes a ti mismo (Branden, 1995).
+                        </p>
+
+                        <table class="tabla-comparativa">
+                            <thead>
+                                <tr>
+                                    <th>Aspecto</th>
+                                    <th>Autoconocimiento</th>
+                                    <th>Autoconcepto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Qué es</strong></td>
+                                    <td>Es la acción y el proceso de explorar tu interior para entender cómo eres.</td>
+                                    <td>Es el conjunto de creencias, ideas y etiquetas que tienes sobre ti en las
+                                        distintas áreas de tu vida (familiar, social, laboral o física).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Enfoque</strong></td>
+                                    <td>Es dinámico y se basa en la observación activa de tus actos, pensamientos y
+                                        reacciones.</td>
+                                    <td>Es más cognitivo y descriptivo; define "quién crees que eres" basándose en tus
+                                        experiencias y en lo que los demás dicen de ti.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Para qué sirve</strong></td>
+                                    <td>Funciona como la base o herramienta para descubrir qué te motiva y qué necesitas
+                                        mejorar en tu vida.</td>
+                                    <td>Ayuda a estructurar tu identidad y determina cómo te presentas ante el mundo
+                                        social.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Principales diferencias</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Acción vs. Resultado:</strong> El autoconocimiento es el <em>camino o la
+                                    búsqueda</em> para descubrirte, y el autoconcepto es la <em>fotografía o descripción
+                                    mental</em> que obtienes de esa búsqueda.</li>
+                            <li><strong>Profundidad:</strong> El autoconocimiento entra en las motivaciones profundas y
+                                la esencia; el autoconcepto se queda en las características observables y los roles que
+                                desempeñas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En LIDTS, el autoconocimiento permite al estudiante detectar con precisión qué lenguajes,
+                            paradigmas o áreas de la ingeniería domina y cuáles requieren mayor práctica; mientras que
+                            un autoconcepto claro y objetivo fortalece su identidad profesional al presentar proyectos o
+                            postular a oportunidades laborales.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s3-tema-3" class="bloque-tema">
+                    <h3>3.3. Autoestima (Enfoque para tecnólogos)</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            A partir de los fundamentos psicológicos de la autoestima de Branden (1995) y el estudio del
+                            fenómeno del impostor (Clance & Imes, 1978), la autoestima en los profesionales de
+                            tecnología se estructura en cuatro ejes:
+                        </p>
+
+                        <h5>1. La Definición "Tech" (El Core)</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>La analogía:</strong> La autoestima no es el contenido que produces, sino el
+                                <strong>sistema operativo (SO) invisible</strong> sobre el que corren todas tus
+                                aplicaciones (proyectos, exámenes, relaciones).
+                            </li>
+                            <li><strong>El concepto:</strong> Si el sistema operativo está dañado o lleno de
+                                <em>bugs</em> de autocrítica, el <em>hardware</em> más potente (tu inteligencia) va a
+                                experimentar <em>crashes</em> constantes. Tener una autoestima saludable es optimizar el
+                                sistema para que resista picos de estrés sin colapsar.
+                            </li>
+                        </ul>
+
+                        <h5>2. Los Componentes del Sistema (Cómo se construye)</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Autoconcepto (La Documentación del Sistema):</strong> Es el archivo
+                                <code>README.md</code> que escribes sobre ti mismo. ¿Tiene datos precisos sobre tus
+                                habilidades o está lleno de falsos reportes de error?
+                            </li>
+                            <li><strong>Autoeficacia (El Algoritmo de Resolución):</strong> Es la confianza en tu
+                                capacidad para resolver problemas complejos y aprender tecnologías nuevas. Se alimenta
+                                de tus victorias previas (tu <em>historial de commits</em> exitosos).</li>
+                            <li><strong>Autoaceptación (El Manejo de Excepciones / Try-Catch):</strong> Cómo reacciona
+                                tu sistema cuando el código falla. Una baja autoestima asume que todo el sistema es
+                                basura si hay un error; una autoestima alta ejecuta un <em>bloque catch</em> para
+                                reparar el fallo sin destruir el servidor.</li>
+                        </ul>
+
+                        <h5>3. Síntomas de una Autoestima "Con Bugs"</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>El Síndrome del Impostor (<em>Over-fitting</em>):</strong> Creer que tus logros
+                                son solo "suerte" o un error del sistema que pronto alguien va a descubrir.</li>
+                            <li><strong>Parálisis por Análisis:</strong> No lanzar un proyecto o no postular a una
+                                vacante porque el código "no es perfecto". Olvidan que <em>hecho es mejor que
+                                    perfecto</em> y que el software se actualiza en producción.</li>
+                            <li><strong>Vincular el Valor Personal al Rendimiento:</strong> Si tu código compila a la
+                                primera, eres un dios; si hay un error de sintaxis, sientes que no sirves para la
+                                carrera. Esto es un error de arquitectura mental.</li>
+                        </ul>
+
+                        <h5>4. Buenas Prácticas para el "Mantenimiento" de la Autoestima</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Haz <em>refactoring</em> de tu diálogo interno:</strong> Monitorea tu consola
+                                mental. Si te tratas mal al fallar, estás inyectando código malicioso a tu propio
+                                sistema.</li>
+                            <li><strong>Celebra los <em>commits</em> pequeños:</strong> No esperes a graduarte o a
+                                fundar una <em>startup</em> para validar tu valor. Cada <em>bug</em> resuelto es un
+                                avance en el repositorio de tu vida.</li>
+                            <li><strong>Despliega en entornos seguros:</strong> Comparte tus dudas con comunidades de
+                                aprendizaje (como hacer un <em>pull request</em> con tus amigos) para validar tus
+                                conocimientos sin miedo a ser juzgado.</li>
+                        </ul>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En la carrera de LIDTS, lidiar con errores de compilación y retos lógicos es parte del día a
+                            día. Implementar un manejo de excepciones emocional (<code>Try-Catch</code>), mantener
+                            actualizado un <code>README.md</code> personal libre de autocrítica destructiva y celebrar
+                            cada <em>commit</em> de aprendizaje protege al estudiante contra el Síndrome del Impostor y
+                            la parálisis por análisis.
+                        </p>
+                    </div>
+                </article>
+
+
+                <div id="s3-ludica" class="actividad-ludica">
+                    <h4>Actividad Lúdica S3: Depuración del Sistema Operativo Mental (<code>Try-Catch</code>)</h4>
+                    <p>Selecciona la respuesta que depura correctamente cada caso tecnológico-emocional:</p>
+
+                    <div class="pregunta-juego">
+                        <p><strong>1. En la arquitectura de la autoestima para tecnólogos, ¿qué módulo equivale al
+                                manejo de excepciones (<code>Try-Catch</code>) que permite reparar un fallo cuando el
+                                código falla sin destruir el servidor?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s3-1')">A)
+                            Parálisis por Análisis</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s3-1')">B)
+                            Autoaceptación</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s3-1')">C)
+                            Síndrome del Impostor (Over-fitting)</button>
+                        <p id="msg-s3-1" class="mensaje-juego"></p>
+                    </div>
+
+                    <div class="pregunta-juego">
+                        <p><strong>2. ¿Cómo se distingue el Autoconocimiento del Autoconcepto?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s3-2')">A) El
+                            autoconocimiento es el camino o búsqueda interior profunda, y el autoconcepto es la
+                            fotografía o descripción mental que obtienes de esa búsqueda.</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s3-2')">B) El
+                            autoconocimiento es estático y superficial, mientras que el autoconcepto no depende de las
+                            experiencias.</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s3-2')">C) Ambos
+                            términos significan exactamente lo mismo.</button>
+                        <p id="msg-s3-2" class="mensaje-juego"></p>
+                    </div>
+                </div>
+
+
+                <footer id="s3-bibliografia" class="bibliografia-apartado">
+                    <h4>Bibliografía del Apartado - Subcompetencia 3 (Formato APA 7)</h4>
+                    <ul class="lista-apa">
+                        <li>Branden, N. (1995). <em>Los seis pilares de la autoestima</em>. Paidós.</li>
+                        <li>Clance, P. R., & Imes, S. A. (1978). The imposter phenomenon in high achieving women:
+                            Dynamics and therapeutic intervention. <em>Psychotherapy: Theory, Research & Practice</em>,
+                            15(3), 241-247. https://doi.org/10.1037/h0086006</li>
+                        <li>Maslow, A. H. (1991). <em>Motivación y personalidad</em> (3.ª ed.). Ediciones Díaz de
+                            Santos.</li>
+                        <li>Rogers, C. R. (1961). <em>El proceso de convertirse en persona</em>. Paidós.</li>
+                    </ul>
+                </footer>
+            </section>
+
+
+            <section id="subcompetencia-4" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Subcompetencia 4</span>
+                    <h2>Valores</h2>
+                </header>
+
+
+                <article id="s4-tema-1" class="bloque-tema">
+                    <h3>4.1. ¿Qué son los valores?</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            Los <strong>valores</strong> son principios y convicciones profundas que guían nuestra
+                            manera de pensar, sentir y actuar en la vida diaria. Funcionan como una brújula interna para
+                            tomar decisiones y convivir en armonía (Frondizi, 2001; Cortina, 2000).
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Tipos principales de valores</h5>
+                                <ul>
+                                    <li><strong>Personales:</strong> Creencias individuales que definen la propia
+                                        identidad y prioridades.</li>
+                                    <li><strong>Sociales:</strong> Principios que orientan la convivencia pacífica en
+                                        comunidad.</li>
+                                    <li><strong>Morales:</strong> Normas para distinguir entre las conductas correctas e
+                                        incorrectas.</li>
+                                    <li><strong>Familiares:</strong> Costumbres y afectos transmitidos dentro del hogar.
+                                    </li>
+                                    <li><strong>Universales:</strong> Acuerdos compartidos por la gran mayoría de las
+                                        culturas humanas.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>Ejemplos cotidianos esenciales</h5>
+                                <ul>
+                                    <li><strong>Respeto:</strong> Aceptar y valorar la dignidad de cada persona.</li>
+                                    <li><strong>Honestidad:</strong> Actuar y hablar siempre con la verdad y la
+                                        rectitud.</li>
+                                    <li><strong>Empatía:</strong> Comprender los sentimientos y las necesidades de los
+                                        demás.</li>
+                                    <li><strong>Responsabilidad:</strong> Cumplir con los compromisos y asumir las
+                                        consecuencias de los actos.</li>
+                                    <li><strong>Solidaridad:</strong> Apoyar de forma desinteresada a quienes lo
+                                        necesitan.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En el ejercicio profesional de LIDTS, valores como la responsabilidad, la honestidad y la
+                            empatía respaldan la confianza de los usuarios y clientes: desde cumplir en tiempo y forma
+                            con los entregables de un sistema hasta proteger la integridad de la información
+                            confidencial y apoyar colaborativamente al equipo de desarrollo.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s4-tema-2" class="bloque-tema">
+                    <h3>4.2. Concepción de Valor y Clasificación de los Valores</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada: Concepción de Valor</h4>
+                        <p>
+                            La <strong>concepción de valor</strong> se refiere a la interpretación, definición y origen
+                            que se le da a lo que consideramos "valioso" (Frondizi, 2001). Existen dos corrientes
+                            filosóficas principales para entender el valor:
+                        </p>
+                        <ul class="lista-detallada">
+                            <li><strong>Subjetivismo axiológico:</strong> Sostiene que los valores <strong>dependen del
+                                    sujeto</strong>. Las cosas valen porque las deseamos, nos agradan o nos son útiles.
+                                Si a nadie le interesa un objeto o una idea, esta carece de valor.</li>
+                            <li><strong>Objetivismo axiológico:</strong> Sostiene que los valores <strong>existen por sí
+                                    mismos</strong>, de forma independiente al sujeto (Scheler, 2001). Las cosas tienen
+                                un valor intrínseco (como la belleza o la justicia), y el ser humano simplemente las
+                                descubre, no las inventa.</li>
+                        </ul>
+
+                        <h4>Clasificación de los Valores</h4>
+                        <table class="tabla-comparativa">
+                            <thead>
+                                <tr>
+                                    <th>Grupo de Valores</th>
+                                    <th>Definición</th>
+                                    <th>Ejemplos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Valores Éticos y Morales</strong></td>
+                                    <td>Regulan la conducta humana hacia el bien y el deber ser. Son la base de la
+                                        convivencia social y la justicia.</td>
+                                    <td>Honestidad, justicia, responsabilidad, respeto, solidaridad.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valores Estéticos</strong></td>
+                                    <td>Se relacionan con la percepción de la belleza, el arte y la armonía visual o
+                                        sensorial.</td>
+                                    <td>Belleza, fealdad, elegancia, armonía, lo sublime.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valores Intelectuales o Cognitivos</strong></td>
+                                    <td>Están vinculados a la búsqueda del conocimiento, la verdad y el desarrollo de la
+                                        razón.</td>
+                                    <td>Sabiduría, verdad, rigor científico, curiosidad, lucidez.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valores Vitales y de la Salud</strong></td>
+                                    <td>Se refieren a la preservación de la vida, el bienestar físico, la salud y la
+                                        integridad del cuerpo.</td>
+                                    <td>Salud, vigor, juventud, bienestar, fortaleza.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valores Económicos y Útiles</strong></td>
+                                    <td>Tienen que ver con la utilidad práctica, la productividad, los bienes materiales
+                                        y el comercio.</td>
+                                    <td>Eficacia, riqueza, éxito, utilidad, ahorro.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valores Religiosos o Espirituales</strong></td>
+                                    <td>Están conectados con las creencias divinas, la fe, la trascendencia y el sentido
+                                        de la existencia más allá de lo material.</td>
+                                    <td>Fe, santidad, piedad, caridad, trascendencia.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valores Sociales y Políticos</strong></td>
+                                    <td>Orientan la organización de las comunidades, las leyes y los derechos de los
+                                        ciudadanos.</td>
+                                    <td>Libertad, igualdad, democracia, paz, patriotismo.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            Construir software integral en LIDTS conjuga distintas clasificaciones de valor:
+                            <strong>intelectuales</strong> en el rigor lógico del código, <strong>económicos y
+                                útiles</strong> en la eficiencia operativa del producto, <strong>estéticos</strong> en
+                            la armonía visual de las interfaces de usuario, y <strong>éticos y sociales</strong> en el
+                            respeto a los derechos de los usuarios.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s4-tema-3" class="bloque-tema">
+                    <h3>4.3. La ética en la ciencia y la tecnología</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            La <strong>ética</strong> guía la responsabilidad y los límites morales de la actividad
+                            científica y tecnológica para asegurar que sus aplicaciones beneficien a la humanidad y al
+                            medio ambiente (Jonas, 1995; Association for Computing Machinery [ACM], 2018).
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Relación fundamental</h5>
+                                <ul>
+                                    <li><strong>Ciencia (el saber):</strong> Busca comprender cómo funciona el universo
+                                        mediante hechos comprobables, pero no decide qué debe o no hacerse.</li>
+                                    <li><strong>Tecnología (el hacer):</strong> Aplica ese conocimiento para crear
+                                        herramientas y transformar el entorno, pero carece de un juicio moral propio
+                                        sobre sus consecuencias.</li>
+                                    <li><strong>Ética (el valor):</strong> Actúa como el freno y la brújula que evalúa
+                                        los fines, los riesgos y los impactos sociales de ambos campos.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>Áreas clave de encuentro</h5>
+                                <ul>
+                                    <li><strong>Ética científica:</strong> Exige honestidad, integridad, imparcialidad y
+                                        cero tolerancia al plagio o la falsificación de datos en la investigación.</li>
+                                    <li><strong>Tecnoética:</strong> Analiza los dilemas morales de la innovación
+                                        técnica, como la privacidad digital, el uso de la inteligencia artificial y la
+                                        ciberseguridad.</li>
+                                    <li><strong>Bioética:</strong> Regula la intervención en la vida humana, animal y
+                                        vegetal (por ejemplo, en genética y medicina).</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h5>Por qué es indispensable hoy</h5>
+                        <ul class="lista-detallada">
+                            <li>La ciencia y la tecnología no son neutrales en sus efectos prácticos; pueden curar
+                                enfermedades o crear graves daños ecológicos y armamentistas.</li>
+                            <li>La ética obliga a los creadores e investigadores a anticipar los riesgos antes de lanzar
+                                innovaciones masivas a la sociedad.</li>
+                        </ul>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            La <strong>Tecnoética</strong> y el Código de Ética de los Desarrolladores de Software son
+                            indispensables en LIDTS porque el código que escribimos impacta directamente en la
+                            privacidad digital, la ciberseguridad y las decisiones automatizadas por Inteligencia
+                            Artificial. Anticipar los riesgos éticos antes de desplegar un sistema protege a los
+                            usuarios y a la sociedad.
+                        </p>
+                    </div>
+                </article>
+
+
+                <div id="s4-ludica" class="actividad-ludica">
+                    <h4>Actividad Lúdica S4: Reto de Axiología y Tecnoética</h4>
+                    <p>Selecciona la respuesta correcta en cada caso:</p>
+
+                    <div class="pregunta-juego">
+                        <p><strong>1. ¿Qué corriente axiológica sostiene que los valores dependen del sujeto (las cosas
+                                valen porque las deseamos, nos agradan o nos son útiles)?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s4-1')">A)
+                            Subjetivismo axiológico</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s4-1')">B)
+                            Objetivismo axiológico</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s4-1')">C)
+                            Bioética experimental</button>
+                        <p id="msg-s4-1" class="mensaje-juego"></p>
+                    </div>
+
+                    <div class="pregunta-juego">
+                        <p><strong>2. ¿Cuál es el área clave que analiza los dilemas morales de la innovación técnica,
+                                tales como la privacidad digital, el uso de la Inteligencia Artificial y la
+                                ciberseguridad?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s4-2')">A)
+                            Valores Vitales</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s4-2')">B)
+                            Tecnoética</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s4-2')">C)
+                            Valores Estéticos</button>
+                        <p id="msg-s4-2" class="mensaje-juego"></p>
+                    </div>
+                </div>
+
+
+                <footer id="s4-bibliografia" class="bibliografia-apartado">
+                    <h4>Bibliografía del Apartado - Subcompetencia 4 (Formato APA 7)</h4>
+                    <ul class="lista-apa">
+                        <li>Association for Computing Machinery [ACM]. (2018). <em>Código de Ética y Conducta
+                                Profesional de ACM</em>. ACM Ethics.
+                            https://www.acm.org/about-acm/code-of-ethics-in-spanish</li>
+                        <li>Cortina, A. (2000). <em>El mundo de los valores: Ética mínima y educación</em> (2.ª ed.).
+                            Editorial El Búho.</li>
+                        <li>Frondizi, R. (2001). <em>¿Qué son los valores? Introducción a la axiología</em> (3.ª ed.).
+                            Fondo de Cultura Económica.</li>
+                        <li>Jonas, H. (1995). <em>El principio de responsabilidad: Ensayo de una ética para la
+                                civilización tecnológica</em>. Herder Editorial.</li>
+                        <li>Scheler, M. (2001). <em>Ética: Nuevo ensayo de fundamentación de un personalismo ético</em>
+                            (3.ª ed.). Caparrós Editores.</li>
+                    </ul>
+                </footer>
+            </section>
+
+
+            <section id="subcompetencia-5" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Subcompetencia 5</span>
+                    <h2>Cultura</h2>
+                </header>
+
+
+                <article id="s5-tema-1" class="bloque-tema">
+                    <h3>5.1. La cultura</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            La <strong>cultura</strong> se define, en su sentido más amplio, como el <strong>conjunto de
+                                valores, creencias, conocimientos, costumbres, símbolos y normas que comparte un grupo
+                                humano y que guían su forma de pensar, actuar y comunicarse</strong> (UNESCO, 2001;
+                            Geertz, 2003). No es algo estático; es un tejido vivo que se aprende, se transmite de
+                            generación en generación y se transforma constantemente para responder a los retos del
+                            entorno.
+                        </p>
+                        <p>
+                            Cuando se cruza con el ámbito tecnológico, la cultura deja de ser un concepto abstracto y se
+                            convierte en el factor determinante que decide el éxito o el fracaso de cualquier
+                            innovación.
+                        </p>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En LIDTS, reconocer a la cultura como un tejido vivo permite diseñar productos tecnológicos
+                            contextualizados. Ningún software opera en el vacío: su adopción real depende de qué tan
+                            bien comprende y respeta las normas, símbolos y necesidades de la comunidad usuaria.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s5-tema-2" class="bloque-tema">
+                    <h3>5.2. Importancia de la cultura en la adopción y en el desarrollo de tecnologías</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada: Adopción de tecnologías</h4>
+                        <p>
+                            La tecnología nunca se adopta en el vacío. Una herramienta técnica solo se integra en la
+                            vida diaria o laboral si resuena con los códigos culturales de sus usuarios (Hofstede et
+                            al., 2010):
+                        </p>
+                        <ul class="lista-detallada">
+                            <li><strong>Vence la resistencia al cambio:</strong> La adopción tecnológica exige modificar
+                                hábitos establecidos. Si una cultura promueve la experimentación y tolera el error, las
+                                personas adoptarán herramientas nuevas con curiosidad. Si la cultura es rígidamente
+                                tradicional o penaliza las fallas, la tecnología será rechazada o saboteada.</li>
+                            <li><strong>Alineación con valores y cosmovisiones:</strong> Las innovaciones prosperan
+                                cuando respetan o potencian los valores de una comunidad. Por ejemplo, en culturas con
+                                un alto sentido de colectividad, las tecnologías que facilitan la colaboración y la
+                                comunicación comunitaria se adoptan exponencialmente más rápido que aquellas que
+                                fomentan el aislamiento.</li>
+                            <li><strong>Determinación de la usabilidad:</strong> La forma en que entendemos un icono, un
+                                color o un flujo de navegación es puramente cultural. Una interfaz intuitiva en
+                                Occidente puede resultar confusa o incluso ofensiva en Oriente si no se adaptan los
+                                códigos simbólicos a la cultura local.</li>
+                        </ul>
+
+                        <h4>Explicación sustentada: Desarrollo de tecnologías</h4>
+                        <p>
+                            La cultura no solo determina cómo se recibe la tecnología, sino también qué tipo de
+                            tecnología se crea en primer lugar:
+                        </p>
+                        <ul class="lista-detallada">
+                            <li><strong>Priorización de problemas (El "Por qué" se inventa):</strong> Los
+                                desarrolladores e ingenieros crean soluciones basados en lo que su cultura considera
+                                valioso o urgente. Una cultura fuertemente orientada al mercado y la productividad
+                                desarrollará tecnologías de automatización industrial, mientras que una cultura enfocada
+                                en el bienestar social priorizará tecnologías accesibles para la salud o la educación
+                                pública.</li>
+                            <li><strong>Sesgos culturales en el software (Algoritmos y Datos):</strong> Los creadores de
+                                tecnología inyectan inconscientemente sus propios valores y sesgos culturales en el
+                                código. Esto es crítico en la Inteligencia Artificial: si los datos de entrenamiento
+                                reflejan la visión del mundo de una sola cultura, los sistemas resultantes tomarán
+                                decisiones inexactas o discriminatorias al aplicarse en entornos culturales diferentes.
+                            </li>
+                            <li><strong>Entornos de innovación (Cultura Organizacional):</strong> El desarrollo de
+                                tecnología de vanguardia requiere de una cultura interna que fomente la diversidad de
+                                pensamiento, la horizontalidad y la seguridad psicológica. Las estructuras
+                                hiperjerárquicas suelen ahogar las ideas disruptivas antes de que puedan convertirse en
+                                prototipos reales.</li>
+                        </ul>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            Para el ingeniero en LIDTS, este conocimiento se traduce en aplicar estándares de
+                            localización e internacionalización de interfaces (UX/UI culturalmente adaptada), prevenir
+                            sesgos algorítmicos en el entrenamiento de modelos de IA y fomentar entornos de trabajo con
+                            seguridad psicológica donde florezca la innovación.
+                        </p>
+                    </div>
+                </article>
+
+
+                <article id="s5-tema-3" class="bloque-tema">
+                    <h3>5.3. Experiencias culturales, Cultura social y Cultura organizacional</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            El fenómeno cultural se estructura en tres niveles que conectan al individuo con la sociedad
+                            y las organizaciones (Schein, 2010):
+                        </p>
+
+                        <h5>1. Experiencias culturales</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Naturaleza:</strong> Se adquieren mediante la socialización, la educación, la
+                                participación en festividades, el consumo de arte, e incluso a través de las
+                                interacciones cotidianas.</li>
+                            <li><strong>Impacto individual:</strong> Moldean la identidad, los sesgos cognitivos y la
+                                sensibilidad estética y ética de una persona. Las experiencias acumuladas dictan cómo un
+                                sujeto reacciona ante lo desconocido y cómo se integra a nuevos grupos.</li>
+                            <li><strong>Perspectiva interpretativa:</strong> Funcionan como el filtro o los "lentes" con
+                                los que el ser humano decodifica la realidad circundante.</li>
+                        </ul>
+
+                        <h5>2. Cultura social</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Cohesión e identidad:</strong> Permite que un grupo de personas se perciba a sí
+                                mismo como una unidad con características comunes y, de manera simultánea, se diferencie
+                                de otras agrupaciones humanas.</li>
+                            <li><strong>Elementos clave:</strong> Incluye el idioma, la religión, la estructura
+                                familiar, las leyes jurídicas, los mitos compartidos y las normas implícitas de
+                                convivencia (qué se considera cortés, aceptable o tabú).</li>
+                            <li><strong>Base fundacional:</strong> La cultura social funciona como la "matriz madre".
+                                Ninguna persona u organización opera en el vacío; todos los comportamientos están
+                                fuertemente condicionados por la zona geográfica o nacionalidad de origen.</li>
+                        </ul>
+
+                        <h5>3. Cultura organizacional</h5>
+                        <ul class="lista-detallada">
+                            <li><strong>Naturaleza interna:</strong> Funciona como el "modo de vida" interno de la
+                                empresa. Determina cómo interactúan los colaboradores entre sí, cómo se toman las
+                                decisiones y cómo se responde al entorno externo.</li>
+                            <li>
+                                <strong>Elementos constitutivos:</strong>
+                                <ul>
+                                    <li><strong>Artefactos visibles:</strong> Estructuras físicas, vestimenta, mitos
+                                        empresariales, ritos y ceremonias.</li>
+                                    <li><strong>Valores adoptados:</strong> Misión, visión, estrategias y filosofías de
+                                        la organización.</li>
+                                    <li><strong>Supuestos básicos:</strong> Creencias inconscientes e invisibles
+                                        arraigadas en los miembros sobre cómo se resuelven los problemas.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Interconexión con los niveles previos:</strong> Aunque una empresa define sus
+                                propias políticas para moldear su cultura, la cultura organizacional siempre se verá
+                                influenciada por la <strong>cultura social</strong> de la región donde opera y las
+                                <strong>experiencias culturales</strong> previas de sus colaboradores.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En las empresas tecnológicas y equipos de desarrollo de software, las metodologías ágiles
+                            (como Scrum o DevOps) se sostienen sobre la <strong>cultura organizacional</strong>: sus
+                            ceremonias (<em>Daily, Sprint Planning, Retrospectiva</em>) son artefactos visibles que
+                            reflejan valores adoptados de transparencia, colaboración horizontal y mejora continua.
+                        </p>
+                    </div>
+                </article>
+
+
+                <div id="s5-ludica" class="actividad-ludica">
+                    <h4>Actividad Lúdica S5: Tarjetas de Repaso - Cultura y Tecnología (Cartas 4 a 6)</h4>
+                    <p>Haz clic en cada carta para revelar su contenido (al completar las 6 cartas del blog se activará
+                        el Easter Egg):</p>
+
+                    <div class="contenedor-flashcards">
+                        <div class="tarjeta-memoria" onclick="abrirCarta(this)">
+                            <strong>Carta 4: Sesgos Culturales en el Software</strong>
+                            <p class="respuesta-carta">Ocurren cuando los creadores o los datos de entrenamiento en IA
+                                reflejan la visión de una sola cultura, produciendo decisiones inexactas o
+                                discriminatorias.</p>
+                            <span class="indicador-carta">[Clic para abrir carta]</span>
+                        </div>
+
+                        <div class="tarjeta-memoria" onclick="abrirCarta(this)">
+                            <strong>Carta 5: Cultura Social (Matriz Madre)</strong>
+                            <p class="respuesta-carta">Tejido macroscópico compartido por una comunidad o nación
+                                (idioma, leyes, normas implícitas) que condiciona a personas y empresas.</p>
+                            <span class="indicador-carta">[Clic para abrir carta]</span>
+                        </div>
+
+                        <div class="tarjeta-memoria" onclick="abrirCarta(this)">
+                            <strong>Carta 6: Elementos de la Cultura Organizacional</strong>
+                            <p class="respuesta-carta">1. Artefactos visibles (ritos y ceremonias), 2. Valores adoptados
+                                (misión y visión) y 3. Supuestos básicos.</p>
+                            <span class="indicador-carta">[Clic para abrir carta]</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <footer id="s5-bibliografia" class="bibliografia-apartado">
+                    <h4>Bibliografía del Apartado - Subcompetencia 5 (Formato APA 7)</h4>
+                    <ul class="lista-apa">
+                        <li>Geertz, C. (2003). <em>La interpretación de las culturas</em> (12.ª ed.). Gedisa.</li>
+                        <li>Hofstede, G., Hofstede, G. J., & Minkov, M. (2010). <em>Cultures and organizations: Software
+                                of the mind</em> (3.ª ed.). McGraw-Hill.</li>
+                        <li>Organización de las Naciones Unidas para la Educación, la Ciencia y la Cultura [UNESCO].
+                            (2001). <em>Declaración Universal de la UNESCO sobre la Diversidad Cultural</em>. UNESCO.
+                        </li>
+                        <li>Schein, E. H. (2010). <em>Organizational culture and leadership</em> (4.ª ed.). Jossey-Bass.
+                        </li>
+                    </ul>
+                </footer>
+            </section>
+
+
+            <section id="subcompetencia-6" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Subcompetencia 6</span>
+                    <h2>Compromiso con el medio ambiente</h2>
+                </header>
+
+
+                <article id="s6-tema-1" class="bloque-tema">
+                    <h3>6.1. La huella ecológica digital (Huella de carbono digital)</h3>
+                    <div class="explicacion-tema">
+                        <h4>Explicación sustentada</h4>
+                        <p>
+                            La <strong>huella ecológica digital</strong> (o huella de carbono digital) mide el impacto
+                            ambiental que generan el uso, la producción y el almacenamiento de datos a través de la
+                            tecnología (The Shift Project, 2019; Belkhir & Elmeligi, 2018). Cada proceso computacional
+                            (desde la fabricación de componentes electrónicos hasta la operación ininterrumpida de
+                            centros de datos y redes de telecomunicaciones) consume energía eléctrica, agua y recursos
+                            minerales, generando emisiones de dióxido de carbono equivalente (CO<sub>2</sub>e).
+                        </p>
+
+                        <div class="columnas-dobles">
+                            <div class="columna">
+                                <h5>Dimensiones del impacto ambiental tecnológico</h5>
+                                <ul>
+                                    <li><strong>Producción de equipos:</strong> Extracción de minerales y energía
+                                        empleada en la manufactura de hardware, así como la generación de desechos
+                                        electrónicos (<em>e-waste</em>).</li>
+                                    <li><strong>Almacenamiento de datos:</strong> Gasto eléctrico y de refrigeración en
+                                        servidores y centros de datos (<em>Data Centers</em>) que alojan información en
+                                        la nube las 24 horas.</li>
+                                    <li><strong>Uso y transferencia en red:</strong> Tráfico de datos por consultas web,
+                                        transmisión de video, correos electrónicos acumulados y procesamiento intensivo
+                                        de algoritmos.</li>
+                                </ul>
+                            </div>
+                            <div class="columna">
+                                <h5>Estrategias de reducción y sostenibilidad</h5>
+                                <ul>
+                                    <li><strong>Higiene y sobriedad digital:</strong> Eliminar archivos y correos
+                                        innecesarios en la nube, reducir envíos pesados y optimizar el uso de
+                                        dispositivos.</li>
+                                    <li><strong>Aprovechamiento de hardware:</strong> Prolongar la vida útil de las
+                                        computadoras mediante mantenimiento preventivo y optimización de software.</li>
+                                    <li><strong>Ingeniería de Software Verde (Green Software):</strong> Desarrollar
+                                        aplicaciones ligeras y algoritmos eficientes que reduzcan el consumo de CPU, RAM
+                                        y energía.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="importancia-lidts">
+                        <h4>Importancia del tema en el Desarrollo de Software (LIDTS)</h4>
+                        <p>
+                            En LIDTS, reducir la huella ecológica digital es una responsabilidad directa del
+                            desarrollador mediante el <strong>Green Software Engineering</strong>. Optimizar la
+                            complejidad algorítmica, indexar correctamente las bases de datos para evitar lecturas
+                            innecesarias en disco, comprimir archivos en la web y evitar fugas de memoria disminuye
+                            drásticamente el consumo eléctrico en servidores y extiende la vida útil del hardware de los
+                            usuarios.
+                        </p>
+                    </div>
+                </article>
+
+
+                <div id="s6-ludica" class="actividad-ludica">
+                    <h4>Actividad Lúdica S6: Reto de Sostenibilidad y Huella Ecológica Digital</h4>
+                    <p>Selecciona la opción correcta sobre el compromiso ambiental en la ingeniería de software:</p>
+
+                    <div class="pregunta-juego">
+                        <p><strong>1. ¿Qué mide la huella ecológica digital (o huella de carbono digital)?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s6-1')">A) El
+                            impacto ambiental que generan el uso, la producción y el almacenamiento de datos a través de
+                            la tecnología.</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s6-1')">B) El
+                            ancho de banda máximo de un servidor local.</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s6-1')">C) La
+                            cantidad de usuarios registrados en una aplicación móvil.</button>
+                        <p id="msg-s6-1" class="mensaje-juego"></p>
+                    </div>
+
+                    <div class="pregunta-juego">
+                        <p><strong>2. ¿Cómo contribuye directamente un ingeniero en LIDTS a disminuir la huella de
+                                carbono digital desde el código?</strong></p>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s6-2')">A)
+                            Ejecutando ciclos infinitos y consultas redundantes al servidor.</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, true, 'msg-s6-2')">B)
+                            Aplicando Green Software: optimizando algoritmos, consultas SQL y peso de activos para
+                            consumir menos energía y recursos de hardware.</button>
+                        <button type="button" class="btn-opcion" onclick="evaluarQuiz(this, false, 'msg-s6-2')">C)
+                            Almacenando copias duplicadas sin comprimir en múltiples centros de datos.</button>
+                        <p id="msg-s6-2" class="mensaje-juego"></p>
+                    </div>
+                </div>
+
+
+                <footer id="s6-bibliografia" class="bibliografia-apartado">
+                    <h4>Bibliografía del Apartado - Subcompetencia 6 (Formato APA 7)</h4>
+                    <ul class="lista-apa">
+                        <li>Belkhir, L., & Elmeligi, A. (2018). Assessing ICT global emissions footprint: Trends to 2040
+                            & recommendations. <em>Journal of Cleaner Production</em>, 177, 448-463.
+                            https://doi.org/10.1016/j.jclepro.2017.12.239</li>
+                        <li>Green Software Foundation. (2023). <em>Learn Green Software: Principles of sustainable
+                                software engineering</em>. Green Software Foundation.
+                            https://learn.greensoftware.foundation/</li>
+                        <li>The Shift Project. (2019). <em>Lean ICT: Towards digital sobriety</em>. The Shift Project.
+                            https://theshiftproject.org/en/article/lean-ict-our-new-report/</li>
+                    </ul>
+                </footer>
+            </section>
+
+
+            <section id="conclusiones" class="bloque-subcompetencia">
+                <header class="encabezado-subcompetencia">
+                    <span class="etiqueta-sub">Cierre Integrador</span>
+                    <h2>Conclusiones Finales</h2>
+                </header>
+                <div class="explicacion-tema">
+                    <p>
+                        El desarrollo de este Proyecto Integrador Final permite constatar que la formación en la
+                        Licenciatura en Ingeniería en Desarrollo y Tecnologías de Software (LIDTS) requiere un
+                        equilibrio sólido entre la excelencia técnica y el Desarrollo Humano. A lo largo de las seis
+                        subcompetencias se evidenció que el ingeniero de software no solo programa sistemas, sino que
+                        diseña herramientas que inciden directamente en la calidad de vida, las libertades y el
+                        bienestar de su comunidad.
+                    </p>
+                    <p>
+                        Comprender nuestras necesidades humanas y formar el carácter con la misma rigurosidad con que
+                        estructuramos una pirámide de pruebas (Subcompetencia 1), trazar un plan de vida integral que
+                        prevenga el desgaste profesional (Subcompetencia 2), optimizar nuestra autoestima como el
+                        sistema operativo base mediante el autoconocimiento y el manejo saludable de errores
+                        (Subcompetencia 3), ejercer la profesión bajo principios axiológicos y de tecnoética
+                        (Subcompetencia 4), respetar la diversidad cultural para evitar sesgos algorítmicos
+                        (Subcompetencia 5) y mitigar la huella ecológica digital mediante código limpio y sostenible
+                        (Subcompetencia 6) consolidan el perfil de un profesionista íntegro, crítico y comprometido con
+                        la transformación positiva de su entorno.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="cofre-pirata-final" class="cofre-oculto">
+                <div class="token-icon">&#9760;</div>
+                <div class="token-texto">
+                    <p class="token-rareza">&#9733; LOGRO SECRETO COMPLETADO (6/6 CARTAS ABIERTAS) &#9733;</p>
+                    <h2 class="token-titulo">¡HAS DESBLOQUEADO EL TOKEN PIRATA AL FINAL DEL MAPA!</h2>
+                    <p class="token-sub">ACCESO A LA TIENDA PIRATA DESBLOQUEADO (14 DIAS GRATIS) - PISTA SECRETA:
+                        ESCRIBE "PIRATA" EN TU TECLADO</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+
+    <footer class="pie-pagina">
+        <p><strong>Universidad Autónoma de Chiapas (UNACH)</strong> - Licenciatura en Ingeniería en Desarrollo y
+            Tecnologías de Software (LIDTS)</p>
+        <p>Proyecto Integrador Final de Desarrollo Humano | Elaborado por Alejandro Moctezuma Zenteno Hernández y
+            Joaquín Alberto Ruiz Agustín © 2026</p>
+    </footer>
+
+
+    <script>
+        function evaluarQuiz(boton, esCorrecto, idMensaje) {
+            const contenedorPregunta = boton.parentElement;
+            const botones = contenedorPregunta.querySelectorAll('.btn-opcion');
+            const mensaje = document.getElementById(idMensaje);
+
+            botones.forEach(btn => {
+                btn.classList.remove('seleccion-correcta', 'seleccion-incorrecta');
+            });
+
+            if (esCorrecto) {
+                boton.classList.add('seleccion-correcta');
+                mensaje.textContent = "[CORRECTO] Has relacionado con éxito el concepto.";
+                mensaje.className = "mensaje-juego correcto";
+            } else {
+                boton.classList.add('seleccion-incorrecta');
+                mensaje.textContent = "[INCORRECTO] Intenta nuevamente.";
+                mensaje.className = "mensaje-juego incorrecto";
+            }
+        }
+        let easterEggDesbloqueado = false;
+
+        function abrirCarta(tarjeta) {
+            const estaAbierta = tarjeta.classList.toggle('abierta');
+            const indicador = tarjeta.querySelector('.indicador-carta');
+
+            if (estaAbierta) {
+                indicador.textContent = "[Clic para ocultar]";
+                tarjeta.setAttribute('data-vista', 'true');
+            } else {
+                indicador.textContent = "[Clic para abrir carta]";
+            }
+            const totalCartas = document.querySelectorAll('.tarjeta-memoria').length;
+            const cartasVistas = document.querySelectorAll('.tarjeta-memoria[data-vista="true"]').length;
+
+            const textoProgreso = document.getElementById('progreso-cartas');
+            if (textoProgreso) {
+                textoProgreso.textContent = cartasVistas + " / " + totalCartas;
+            }
+
+            const barraCartas = document.getElementById('barra-cartas-relleno');
+            if (barraCartas) {
+                barraCartas.style.width = (cartasVistas / totalCartas * 100) + '%';
+            }
+            if (cartasVistas === totalCartas && !easterEggDesbloqueado) {
+                easterEggDesbloqueado = true;
+                activarTokenPirata();
+            }
+        }
+        function activarTokenPirata() {
+            const toast = document.getElementById('fortnite-toast');
+            const cofreFinal = document.getElementById('cofre-pirata-final');
+
+            toast.classList.add('mostrar');
+
+            if (cofreFinal) {
+                cofreFinal.classList.add('desbloqueado');
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('mostrar');
+            }, 6000);
+        }
+        let bufferTeclas = '';
+        const codigoSecreto = 'pirata';
+
+        window.addEventListener('keydown', (e) => {
+            bufferTeclas += e.key.toLowerCase();
+            if (bufferTeclas.length > codigoSecreto.length) {
+                bufferTeclas = bufferTeclas.slice(-codigoSecreto.length);
+            }
+            if (bufferTeclas === codigoSecreto) {
+                activarTokenPirata();
+                bufferTeclas = '';
+            }
+        });
+        const barraLectura = document.getElementById('barra-lectura');
+        const btnSubir = document.getElementById('btn-subir');
+
+        function actualizarScroll() {
+            const alto = document.documentElement.scrollHeight - window.innerHeight;
+            const avance = alto > 0 ? (window.scrollY / alto) * 100 : 0;
+            if (barraLectura) barraLectura.style.width = avance + '%';
+            if (btnSubir) btnSubir.classList.toggle('visible', window.scrollY > 600);
+        }
+
+        window.addEventListener('scroll', actualizarScroll, { passive: true });
+        actualizarScroll();
+        const enlacesIndice = document.querySelectorAll('.lista-indice a');
+        const seccionesObservadas = document.querySelectorAll('.bloque-subcompetencia, .bloque-tema, .actividad-ludica, .bibliografia-apartado');
+
+        if ('IntersectionObserver' in window) {
+            const observador = new IntersectionObserver((entradas) => {
+                entradas.forEach(entrada => {
+                    if (entrada.isIntersecting) {
+                        const id = entrada.target.id;
+                        enlacesIndice.forEach(enlace => {
+                            enlace.classList.toggle('activo', enlace.getAttribute('href') === '#' + id);
+                        });
+                    }
+                });
+            }, { rootMargin: '-20% 0px -70% 0px' });
+
+            seccionesObservadas.forEach(seccion => {
+                if (seccion.id) observador.observe(seccion);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
